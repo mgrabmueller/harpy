@@ -1,0 +1,103 @@
+							-*-outline-*-
+* Harpy NEWS
+
+** Updated for move to Github.
+
+*** Re-licensed under BSD3
+
+** New in version 0.6.0.0
+
+*** Re-licensed under BSD3
+
+*** Updated to work with GHC 7.8.3
+
+** New in version 0.4.2
+
+*** package structure
+
+- The disassembler is now in a separate package, and is re-exported for
+  compatibility by Harpy. This allows us to give the more liberal BSD licence
+  to the disassembler.
+
+*** New instructions
+
+- The "mov", "jcc" (jump on condition code), and "cmp" instructions support
+  "Ptr a" as operand
+
+- Henning Thielemann provided some further floating point and SSE
+  instructions.
+
+- The loop instruction supports labels now.
+
+*** Enhancements
+
+- The disassembly of Harpy's internal code buffers includes all labels
+  now, even when multiple labels are defined for the same location.
+
+** New in version 0.4.1
+
+*** New Instances
+
+- Many of Harpy's types are now instances of Eq.
+
+*** New instructions
+
+- Added support for the prefetching instructions PREFETCH0, PREFETCH1,
+  PREFETCH2 and PREFETCHNTA.
+
+*** Bug fixes
+
+- Harpy.X86Disassembler.disassembleBloc was too strict and caused
+  stack overflows for large inputs.  This was fixed.
+
+- Disassembler: The instruction prefix list was not cleared when
+  beginning to parse a new instruction.  This caused incorrect
+  disassembly of SSE instructions.
+
+- Disassembler: A bug has been fixed in the parsing routine for the
+  addressing mode "scaled index + 32 bit offset" without base
+  register.
+
+** New in version 0.4
+
+- New convenience top-level module "Harpy", which re-exports
+  Harpy.CodeGenMonad, Harpy.Call and Harpy.X86Assembler
+
+- It is now possible to override Harpy's automatic code buffer
+  management.  The new field 'customCodeBuffer' in the type
+  'CodeGenConfig' can be set to 'Just (buf, size)', where 'buf' is a
+  pointer to a memory region of 'size' bytes.  Harpy will then use the
+  supplied code buffer and will not perform any automatic code buffer
+  allocation on overflow.  Overflow checking is still performed and
+  will result in an exception in the CodeGen monad.
+
+- When using the high-level assembler in X86Assembler, the code buffer
+  is automatically protected from overflow.
+
+- Floating point operations added to X86Assembler (only for double
+  operands yet).
+
+- Preliminary support for SSE instructions.  Currently, only the
+  packed and scalar floating-point arithmetic operations are supported
+  (both in the low-level module Harpy.X86CodeGen and as methods in
+  Harpy.X86Assembler)
+
+- Code buffer default size has been increased from 128 to 4096 bytes.
+
+- The CodeGenMonad fails when a label is defined twice.
+
+- It is now possible to associate names with labels, using the new
+  operation newNamedLabel.  The given names will show up in the
+  disassembly, which makes debugging of generated code much easier.
+
+- The doc directory contains a second, slightly larger tutorial now.
+
+- The examples/evaluator directory contains a small example
+  interpreter for arithmetic expressions, which translates expressions
+  entered at the keayboard to machine code on the fly.  This is the
+  demo program we presented at the Haskell Workshop 2007.
+
+** New in version 0.2
+
+- Everything is new!  This is the first released version.
+

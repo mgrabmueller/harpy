@@ -1,0 +1,69 @@
+Cabal-version:  >=1.6
+Build-type: Simple
+Name:           harpy
+Version:        0.6.0.1
+License:        BSD3
+License-file:   LICENSE
+Author:         Dirk Kleeblatt <dirk.kleeblatt@gmx.de>
+                Martin Grabmueller <martin@grabmueller.de>
+Maintainer:     martin@grabmueller.de
+Category:       Code Generation
+Synopsis:       Runtime code generation for x86 machine code
+Description:	The package contains the following components:
+	.
+	* An x86 assembler.  We provide both low-level code generation in
+	  module "Harpy.X86CodeGen" as well as a (slightly) higher-level
+	  implementation in module "Harpy.X86Assembler", which figures out
+	  addressing modes based on an instruction's operand types.
+	.
+	* An x86 disassembler which knows most of the opcodes available on
+	  modern x86 processors and can display its output both in the style
+	  used in Intel documents an in AT&T style, like the GNU tools. The
+	  disassembler can be found in module "Harpy.X86Disassembler".  The
+          disassembler is re-exported from the disassembler package for
+          compatibility with earlier Harpy releases.
+	.
+	* Some abstractions over the abovementioned code generation modules,
+	  such as automatic label management and code generation
+	  combinators (for if-then-else statements, while-loops, functions)
+	  (module "Harpy.X86CGCombinators").
+	.
+	* All the above modules use the code generation monad defined in module
+	  "Harpy.CodeGenMonad".
+homepage:            https://github.com/mgrabmueller/harpy
+bug-reports:         https://github.com/mgrabmueller/harpy/issues
+Stability:      Experimental
+
+Extra-source-files:
+    NEWS README.md Makefile ChangeLog.md
+    doc/Makefile doc/tutorial.lhs doc/larger-tutorial.lhs
+    examples/evaluator/ArithTypes.hs examples/evaluator/ArithParser.hs
+    examples/evaluator/Evaluator.hs
+
+source-repository head
+  type:     git
+  location: https://github.com/mgrabmueller/harpy
+
+Library
+  Build-depends:
+    base >= 4 && < 5,
+    parsec >= 1 && < 4,
+    mtl >= 1 && < 3,
+    template-haskell >= 2 && < 3,
+    pretty >= 1 && < 2,
+    containers >= 0.3 && < 1,
+    array >= 0.3 && < 1,
+    disassembler >= 0.2.0.0
+  Exposed-Modules:
+    Harpy,
+    Harpy.X86CodeGen,
+    Harpy.X86Assembler,
+    Harpy.CodeGenMonad,
+    Harpy.Call,
+    Harpy.X86Disassembler,
+    Harpy.X86CGCombinators
+  Extensions:
+    ForeignFunctionInterface, MultiParamTypeClasses,
+    TemplateHaskell, CPP, FlexibleContexts, FlexibleInstances,
+    RankNTypes
+
