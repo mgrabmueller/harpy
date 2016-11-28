@@ -35,6 +35,7 @@ module Harpy.CodeGenMonad(
           Label,
           FixupKind(..),
           CodeGenConfig(..),
+          firstBuffer,
           defaultCodeGenConfig,
     -- * Functions
     -- ** General code generator monad operations
