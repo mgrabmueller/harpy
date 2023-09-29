@@ -3,7 +3,7 @@
 -- Module      :  Harpy.X86Disassembler
 -- Copyright   :  (c) Martin Grabmueller and Dirk Kleeblatt
 -- License     :  BSD3
--- 
+--
 -- Maintainer  :  martin@grabmueller.de
 -- Stability   :  provisional
 -- Portability :  portable

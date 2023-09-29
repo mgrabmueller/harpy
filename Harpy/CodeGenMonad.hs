@@ -5,7 +5,7 @@
 -- Module:      Harpy.CodeGenMonad
 -- Copyright:   (c) 2006-20015 Martin Grabmueller and Dirk Kleeblatt
 -- License:     BSD3
--- 
+--
 -- Maintainer:  martin@grabmueller.de
 -- Stability:   provisional
 -- Portability: portable (but generated code non-portable)
@@ -18,7 +18,7 @@
 --
 -- All the code generation functions in module "Harpy.X86CodeGen" live
 -- in this monad and use its error reporting facilities as well as the
--- internal state maintained by the monad.  
+-- internal state maintained by the monad.
 --
 -- The library user can pass a user environment and user state through
 -- the monad.  This state is independent from the internal state and
@@ -111,13 +111,13 @@ newtype CodeGen e s a = CodeGen ((e, CodeGenEnv) -> (s, CodeGenState) -> IO ((s,
 -- used, Harpy does not perform any code buffer resizing (calls to
 -- 'ensureBufferSize' will be equivalent to calls to
 -- 'checkBufferSize').
-data CodeGenConfig = CodeGenConfig { 
-      codeBufferSize   :: Int,                   -- ^ Size of individual code buffer blocks. 
+data CodeGenConfig = CodeGenConfig {
+      codeBufferSize   :: Int,                   -- ^ Size of individual code buffer blocks.
       customCodeBuffer :: Maybe (Ptr Word8, Int) -- ^ Code buffer passed in.
     }
 
 -- | Internal state of the code generator
-data CodeGenState = CodeGenState { 
+data CodeGenState = CodeGenState {
       buffer        :: Ptr Word8,                    -- ^ Pointer to current code buffer.
       bufferList    :: [(Ptr Word8, Int)],           -- ^ List of all other code buffers.
       firstBuffer   :: Ptr Word8,                    -- ^ Pointer to first buffer.
@@ -130,10 +130,10 @@ data CodeGenState = CodeGenState {
       config        :: CodeGenConfig                 -- ^ Configuration record.
     }
 
-data FixupEntry = FixupEntry { 
+data FixupEntry = FixupEntry {
       fueBuffer :: Ptr Word8,
       fueOfs    :: Int,
-      fueKind   :: FixupKind 
+      fueKind   :: FixupKind
     }
 
 -- | Kind of a fixup entry.  When a label is emitted with
@@ -154,11 +154,11 @@ data RelocKind = RelocPCRel    -- ^ PC-relative relocation
    deriving (Show)
 
 -- | Relocation entry
-data Reloc = Reloc { offset :: Int, 
+data Reloc = Reloc { offset :: Int,
              -- ^ offset in code block which needs relocation
                      kind :: RelocKind,
              -- ^ kind of relocation
-                     address :: FunPtr () 
+                     address :: FunPtr ()
              -- ^ target address
            }
    deriving (Show)
@@ -176,14 +176,14 @@ instance Functor (CodeGen e s) where
                          case r of
                            (state', Left err) -> return (state', Left err)
                            (state', Right v) -> return (state', Right $ f v))
-  
+
 instance Applicative (CodeGen e s) where
   pure x = cgReturn x
   f <*> x = do
     f' <- f
     x' <- x
     return $ f' x'
-  
+
 instance Monad (CodeGen e s) where
     return x = cgReturn x
     fail err = cgFail err
@@ -196,7 +196,7 @@ cgFail :: String -> CodeGen e s a
 cgFail err = CodeGen (\_env state -> return (state, Left (text err)))
 
 cgBind :: CodeGen e s a -> (a -> CodeGen e s a1) -> CodeGen e s a1
-cgBind m k = CodeGen (\env state -> 
+cgBind m k = CodeGen (\env state ->
                do r1 <- unCg m env state
                   case r1 of
                     (state', Left err) -> return (state', Left err)
@@ -215,7 +215,7 @@ emptyCodeGenState = CodeGenState { buffer = undefined,
                                    firstBuffer = undefined,
                                    bufferOfs = 0,
                                    bufferSize = 0,
-                                   relocEntries = [], 
+                                   relocEntries = [],
                                    nextLabel = 0,
                                    definedLabels = Map.empty,
                                    pendingFixups = Map.empty,
@@ -284,10 +284,10 @@ checkBufferSize :: Int -> CodeGen e s ()
 checkBufferSize needed =
     do state <- getInternalState
        unless (bufferOfs state + needed <= bufferSize state)
-              (failCodeGen (text "code generation buffer overflow: needed additional" <+> 
-                            int needed <+> text "bytes (offset =" <+> 
-                            int (bufferOfs state) <> 
-                            text ", buffer size =" <+> 
+              (failCodeGen (text "code generation buffer overflow: needed additional" <+>
+                            int needed <+> text "bytes (offset =" <+>
+                            int (bufferOfs state) <>
+                            text ", buffer size =" <+>
                             int (bufferSize state) <> text ")"))
 
 -- | Make sure that the code buffer has room for at least the given
@@ -322,32 +322,32 @@ ensureBufferSize needed =
 -- is normally the entry point to the generated code.
 getEntryPoint :: CodeGen e s (Ptr Word8)
 getEntryPoint =
-    CodeGen (\ _ (ustate, state) -> 
+    CodeGen (\ _ (ustate, state) ->
       return $ ((ustate, state), Right (firstBuffer state)))
 
 -- | Return the current offset in the code buffer, e.g. the offset
 -- at which the next instruction will be emitted.
 getCodeOffset :: CodeGen e s Int
 getCodeOffset =
-    CodeGen (\ _ (ustate, state) -> 
+    CodeGen (\ _ (ustate, state) ->
       return $ ((ustate, state), Right (bufferOfs state)))
 
--- | Set the user state to the given value. 
+-- | Set the user state to the given value.
 setState :: s -> CodeGen e s ()
 setState st =
-    CodeGen (\ _ (_, state) -> 
+    CodeGen (\ _ (_, state) ->
       return $ ((st, state), Right ()))
 
 -- | Return the current user state.
 getState :: CodeGen e s s
 getState =
-    CodeGen (\ _ (ustate, state) -> 
+    CodeGen (\ _ (ustate, state) ->
       return $ ((ustate, state), Right (ustate)))
 
 -- | Return the current user environment.
 getEnv :: CodeGen e s e
 getEnv =
-    CodeGen (\ (uenv, _) state -> 
+    CodeGen (\ (uenv, _) state ->
       return $ (state, Right uenv))
 
 -- | Set the environment to the given value and execute the given
@@ -357,25 +357,25 @@ withEnv e (CodeGen cg) =
     CodeGen (\ (_, env) state ->
       cg (e, env) state)
 
--- | Set the user state to the given value. 
+-- | Set the user state to the given value.
 setInternalState :: CodeGenState -> CodeGen e s ()
 setInternalState st =
-    CodeGen (\ _ (ustate, _) -> 
+    CodeGen (\ _ (ustate, _) ->
       return $ ((ustate, st), Right ()))
 
 -- | Return the current user state.
 getInternalState :: CodeGen e s CodeGenState
 getInternalState =
-    CodeGen (\ _ (ustate, state) -> 
+    CodeGen (\ _ (ustate, state) ->
       return $ ((ustate, state), Right (state)))
 
 -- | Return the pointer to the start of the code buffer.
 getBasePtr :: CodeGen e s (Ptr Word8)
 getBasePtr =
-    CodeGen (\ _ (ustate, state) -> 
+    CodeGen (\ _ (ustate, state) ->
       return $ ((ustate, state), Right (buffer state)))
 
--- | Return a list of all code buffers and their respective size 
+-- | Return a list of all code buffers and their respective size
 -- (i.e., actually used space for code, not allocated size).
 getCodeBufferList :: CodeGen e s [(Ptr Word8, Int)]
 getCodeBufferList = do st <- getInternalState
@@ -407,21 +407,21 @@ setLabel =
        defineLabel l
        return l
 
--- | Emit a relocation entry for the given offset, relocation kind 
+-- | Emit a relocation entry for the given offset, relocation kind
 -- and target address.
 emitRelocInfo :: Int -> RelocKind -> FunPtr a -> CodeGen e s ()
-emitRelocInfo ofs knd addr = 
+emitRelocInfo ofs knd addr =
     do state <- getInternalState
        setInternalState state{relocEntries =
-                              Reloc{offset = ofs, 
+                              Reloc{offset = ofs,
                                     kind = knd,
-                                    address = castFunPtr addr} : 
+                                    address = castFunPtr addr} :
                               (relocEntries state)}
 
--- | Emit a byte value to the code buffer. 
+-- | Emit a byte value to the code buffer.
 emit8 :: Word8 -> CodeGen e s ()
-emit8 op = 
-    CodeGen (\ _ (ustate, state) -> 
+emit8 op =
+    CodeGen (\ _ (ustate, state) ->
       do let buf = buffer state
              ptr = bufferOfs state
          pokeByteOff buf ptr op
@@ -429,8 +429,8 @@ emit8 op =
 
 -- | Store a byte value at the given offset into the code buffer.
 emit8At :: Int -> Word8 -> CodeGen e s ()
-emit8At pos op = 
-    CodeGen (\ _ (ustate, state) -> 
+emit8At pos op =
+    CodeGen (\ _ (ustate, state) ->
       do let buf = buffer state
          pokeByteOff buf pos op
          return $ ((ustate, state), Right ()))
@@ -438,15 +438,15 @@ emit8At pos op =
 -- | Return the byte value at the given offset in the code buffer.
 peek8At :: Int -> CodeGen e s Word8
 peek8At pos =
-    CodeGen (\ _ (ustate, state) -> 
+    CodeGen (\ _ (ustate, state) ->
       do let buf = buffer state
          b <- peekByteOff buf pos
          return $ ((ustate, state), Right b))
 
 -- | Like 'emit8', but for a 32-bit value.
 emit32 :: Word32 -> CodeGen e s ()
-emit32 op = 
-    CodeGen (\ _ (ustate, state) -> 
+emit32 op =
+    CodeGen (\ _ (ustate, state) ->
       do let buf = buffer state
              ptr = bufferOfs state
          pokeByteOff buf ptr op
@@ -454,8 +454,8 @@ emit32 op =
 
 -- | Like 'emit8At', but for a 32-bit value.
 emit32At :: Int -> Word32 -> CodeGen e s ()
-emit32At pos op = 
-    CodeGen (\ _ (ustate, state) -> 
+emit32At pos op =
+    CodeGen (\ _ (ustate, state) ->
       do let buf = buffer state
          pokeByteOff buf pos op
          return $ ((ustate, state), Right ()))
@@ -463,10 +463,10 @@ emit32At pos op =
 -- | Emit a label at the current offset in the code buffer.  All
 -- references to the label will be relocated to this offset.
 defineLabel :: Label -> CodeGen e s ()
-defineLabel (Label lab name) = 
+defineLabel (Label lab name) =
     do state <- getInternalState
        case Map.lookup lab (definedLabels state) of
-         Just _ -> failCodeGen $ text "duplicate definition of label" <+> 
+         Just _ -> failCodeGen $ text "duplicate definition of label" <+>
                      int lab
          _ -> return ()
        case Map.lookup lab (pendingFixups state) of
@@ -502,8 +502,8 @@ performFixup labBuf labOfs (FixupEntry{fueBuffer = buf, fueOfs = ofs, fueKind = 
 -- be patched to target the address associated with this label when
 -- it is defined later.
 emitFixup :: Label -> Int -> FixupKind -> CodeGen e s ()
-emitFixup (Label lab _) ofs knd = 
-    do state <- getInternalState 
+emitFixup (Label lab _) ofs knd =
+    do state <- getInternalState
        let base = buffer state
            ptr = bufferOfs state
            fue = FixupEntry{fueBuffer = base,
@@ -550,12 +550,12 @@ disassemble = do
                   createLabel (l, (buf, ofs, name)) = Dis.PseudoInstruction addr
                                                         (case name of
                                                            "" ->
-                                                               "label " ++ show l ++ 
-                                                                " [" ++ 
-                                                                hex32 (fromIntegral (ptrToWordPtr (buf `plusPtr` ofs))) ++ 
+                                                               "label " ++ show l ++
+                                                                " [" ++
+                                                                hex32 (fromIntegral (ptrToWordPtr (buf `plusPtr` ofs))) ++
                                                                 "]"
-                                                           _ -> name ++ ": [" ++ 
-                                                                  hex32 (fromIntegral (ptrToWordPtr (buf `plusPtr` ofs))) ++ 
+                                                           _ -> name ++ ": [" ++
+                                                                  hex32 (fromIntegral (ptrToWordPtr (buf `plusPtr` ofs))) ++
                                                                   "]")
               return $ fmap createLabel labs ++ [i]
        hex32 :: Int -> String

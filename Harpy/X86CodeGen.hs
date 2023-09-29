@@ -3,7 +3,7 @@
 -- Module      :  X86CodeGen
 -- Copyright   :  (c) 2006-2015 Martin Grabmueller and Dirk Kleeblatt
 -- License     :  BSD3
--- 
+--
 -- Maintainer  :  martin@grabmueller.de
 -- Stability   :  provisional
 -- Portability :  portable (but generated code non-portable)
@@ -27,8 +27,8 @@
 -- The information in this file is based on the header file
 -- x86-codegen.h from the mono distribution, which has the following
 -- copyright information:
--- 
--- @ 
+--
+-- @
 --  * x86-codegen.h: Macros for generating x86 code
 --  *
 --  * Authors:
@@ -37,7 +37,7 @@
 --  *   Sergey Chaban (serge\@wildwestsoftware.com)
 --  *   Dietmar Maurer (dietmar\@ximian.com)
 --  *   Patrik Torstensson
---  * 
+--  *
 --  * Copyright (C)  2000 Intel Corporation.  All rights reserved.
 --  * Copyright (C)  2001, 2002 Ximian, Inc.
 --  *
@@ -50,8 +50,8 @@ module Harpy.X86CodeGen(
     -- * Constants
     -- ** Machine characteristics
     -- |  Sizes of various machine data types in bytes.
-    x86_dword_size, 
-    x86_qword_size, 
+    x86_dword_size,
+    x86_qword_size,
     x86_max_instruction_bytes,
     -- ** Register numbers
     -- | x86 general-purpose register numbers
@@ -77,10 +77,10 @@ module Harpy.X86CodeGen(
     -- | FP status word codes
     x86_fp_c0, x86_fp_c1, x86_fp_c2, x86_fp_c3, x86_fp_cc_mask,
     -- | FP control word codes
-    x86_fpcw_invopex_mask, x86_fpcw_denopex_mask, x86_fpcw_zerodiv_mask, 
-    x86_fpcw_ovfex_mask, x86_fpcw_undfex_mask, x86_fpcw_precex_mask, 
+    x86_fpcw_invopex_mask, x86_fpcw_denopex_mask, x86_fpcw_zerodiv_mask,
+    x86_fpcw_ovfex_mask, x86_fpcw_undfex_mask, x86_fpcw_precex_mask,
     x86_fpcw_precc_mask, x86_fpcw_roundc_mask,
-    x86_fpcw_prec_single, x86_fpcw_prec_double, 
+    x86_fpcw_prec_single, x86_fpcw_prec_double,
     x86_fpcw_prec_extended,
     x86_fpcw_round_nearest, x86_fpcw_round_down, x86_fpcw_round_up,
     x86_fpcw_round_tozero,
@@ -88,9 +88,9 @@ module Harpy.X86CodeGen(
     -- | Integer conditions codes
     x86_cc_eq, x86_cc_e, x86_cc_z,
     x86_cc_ne, x86_cc_nz,
-    x86_cc_lt, x86_cc_b, x86_cc_c, x86_cc_nae, x86_cc_le, x86_cc_be, 
-    x86_cc_na, x86_cc_gt, x86_cc_a, x86_cc_nbe, x86_cc_ge, x86_cc_ae, 
-    x86_cc_nb, x86_cc_nc, x86_cc_lz, x86_cc_s, x86_cc_gez, x86_cc_ns, 
+    x86_cc_lt, x86_cc_b, x86_cc_c, x86_cc_nae, x86_cc_le, x86_cc_be,
+    x86_cc_na, x86_cc_gt, x86_cc_a, x86_cc_nbe, x86_cc_ge, x86_cc_ae,
+    x86_cc_nb, x86_cc_nc, x86_cc_lz, x86_cc_s, x86_cc_gez, x86_cc_ns,
     x86_cc_p, x86_cc_np, x86_cc_pe, x86_cc_po, x86_cc_o, x86_cc_no,
     -- ** Instruction prefix codes
     x86_lock_prefix, x86_repnz_prefix, x86_repz_prefix, x86_rep_prefix,
@@ -103,7 +103,7 @@ module Harpy.X86CodeGen(
     -- ** Code emission
     -- | These functions are used to emit parts of instructions, such
     -- as constants or operand descriptions.
-    x86_imm_emit16, x86_imm_emit8, x86_imm_emit32, 
+    x86_imm_emit16, x86_imm_emit8, x86_imm_emit32,
     x86_membase_emit, x86_alu_reg_imm,
     -- ** Call instructions
     x86_call_hs, x86_call_membase, x86_call_mem, x86_call_reg, x86_call_code,
@@ -113,9 +113,9 @@ module Harpy.X86CodeGen(
     x86_ret, x86_ret_imm,
     -- ** Jump and branch
     x86_jecxz, x86_branch, x86_branch_pointer, x86_branch32, x86_branch8,
-    x86_jump_membase, x86_jump_pointer, x86_jump_mem, x86_jump_reg, 
-    x86_jump32, x86_jump8, 
-    x86_loopne, x86_loope, x86_loop, 
+    x86_jump_membase, x86_jump_pointer, x86_jump_mem, x86_jump_reg,
+    x86_jump32, x86_jump8,
+    x86_loopne, x86_loope, x86_loop,
     -- ** Stack operations
     x86_push_reg, x86_push_regp, x86_push_mem, x86_push_membase,
     x86_push_imm, x86_push_imm_template, x86_push_memindex,
@@ -123,19 +123,19 @@ module Harpy.X86CodeGen(
     x86_popfd, x86_pushfd, x86_popad, x86_pushad,
     -- ** Data movement
     x86_mov_reg_reg, x86_mov_reg_imm, x86_mov_mem_imm, x86_mov_membase_imm,
-    x86_mov_memindex_imm, x86_mov_mem_reg, x86_mov_reg_mem, 
+    x86_mov_memindex_imm, x86_mov_mem_reg, x86_mov_reg_mem,
     x86_mov_regp_reg, x86_mov_reg_regp, x86_mov_membase_reg,
     x86_mov_reg_membase, x86_mov_memindex_reg, x86_mov_reg_memindex,
     -- ** Arithmetic
-    x86_xadd_reg_reg, x86_xadd_mem_reg, x86_xadd_membase_reg, 
+    x86_xadd_reg_reg, x86_xadd_mem_reg, x86_xadd_membase_reg,
     x86_inc_mem, x86_inc_membase, x86_inc_reg,
     x86_dec_mem, x86_dec_membase, x86_dec_reg,
     x86_not_mem, x86_not_membase, x86_not_reg,
-    x86_neg_mem, x86_neg_membase, x86_neg_reg, 
+    x86_neg_mem, x86_neg_membase, x86_neg_reg,
     x86_alu_mem_imm, x86_alu_membase_imm, x86_alu_membase8_imm,
     x86_alu_mem_reg, x86_alu_membase_reg, x86_alu_reg_reg,
     x86_alu_reg8_reg8, x86_alu_reg_mem, x86_alu_reg_membase,
-    x86_mul_reg, x86_mul_mem, x86_mul_membase, 
+    x86_mul_reg, x86_mul_mem, x86_mul_membase,
     x86_imul_reg_reg, x86_imul_reg_membase, x86_imul_reg_reg_imm,
     x86_imul_reg_mem,
     x86_imul_reg_mem_imm, x86_imul_reg_membase_imm,
@@ -152,13 +152,13 @@ module Harpy.X86CodeGen(
     x86_shift_reg, x86_shift_mem, x86_shift_membase,
     x86_shrd_reg, x86_shrd_reg_imm, x86_shld_reg, x86_shld_reg_imm,
     -- ** Conditional move
-    x86_cmov_membase, x86_cmov_mem, x86_cmov_reg, 
+    x86_cmov_membase, x86_cmov_mem, x86_cmov_reg,
     -- ** Conditional set
     x86_set_membase, x86_set_mem, x86_set_reg,
     -- ** Address calculation
     x86_lea_mem, x86_lea_membase, x86_lea_memindex,
-    -- ** Conversion 
-    x86_cdq,x86_widen_memindex, x86_widen_membase, x86_widen_mem, 
+    -- ** Conversion
+    x86_cdq,x86_widen_memindex, x86_widen_membase, x86_widen_mem,
     x86_widen_reg,
     -- ** Floating point
     x86_fp_op_mem, x86_fp_op_membase, x86_fp_op, x86_fp_op_reg,
@@ -170,9 +170,9 @@ module Harpy.X86CodeGen(
     x86_fld_reg, x86_fldz, x86_fld1, x86_fldpi,
     x86_fst, x86_fst_membase, x86_fst80_mem, x86_fst80_membase,
     FIntSize(..),
-    x86_fist_pop, x86_fist_pop_membase, x86_fstsw, 
+    x86_fist_pop, x86_fist_pop_membase, x86_fstsw,
     x86_fist_membase, x86_fild, x86_fild_membase,
-    x86_fsin, x86_fcos, x86_fabs, x86_ftst, x86_fxam, x86_fpatan, 
+    x86_fsin, x86_fcos, x86_fabs, x86_ftst, x86_fxam, x86_fpatan,
     x86_fprem, x86_fprem1, x86_frndint, x86_fsqrt, x86_fptan,
     x86_fincstp, x86_fdecstp,
     -- ** SSE instructions
@@ -240,7 +240,7 @@ x86_ebp = 5
 x86_esi = 6
 x86_edi = 7
 
-x86_cmp, x86_or, x86_adc, x86_sbb, x86_and, x86_sub, x86_xor, 
+x86_cmp, x86_or, x86_adc, x86_sbb, x86_and, x86_sub, x86_xor,
   x86_add :: Word8
 x86_add = 0
 x86_or  = 1
@@ -321,8 +321,8 @@ x86_fp_c3 = 0x4000
 x86_fp_cc_mask = 0x4500
 
 -- | FP control word
-x86_fpcw_invopex_mask, x86_fpcw_denopex_mask, x86_fpcw_zerodiv_mask, 
- x86_fpcw_ovfex_mask, x86_fpcw_undfex_mask, x86_fpcw_precex_mask, 
+x86_fpcw_invopex_mask, x86_fpcw_denopex_mask, x86_fpcw_zerodiv_mask,
+ x86_fpcw_ovfex_mask, x86_fpcw_undfex_mask, x86_fpcw_precex_mask,
  x86_fpcw_precc_mask, x86_fpcw_roundc_mask :: Word32
 
 x86_fpcw_invopex_mask = 0x1
@@ -335,7 +335,7 @@ x86_fpcw_precc_mask   = 0x300
 x86_fpcw_roundc_mask  = 0xc00
 
 -- | Values for precision control
-x86_fpcw_prec_single, x86_fpcw_prec_double, 
+x86_fpcw_prec_single, x86_fpcw_prec_double,
  x86_fpcw_prec_extended :: Word32
 x86_fpcw_prec_single    = 0
 x86_fpcw_prec_double    = 0x200
@@ -356,7 +356,7 @@ x86_lock_prefix, x86_repnz_prefix, x86_repz_prefix, x86_rep_prefix,
  x86_likely_prefix, x86_operand_prefix, x86_address_prefix :: Word8
 x86_lock_prefix = 0xf0
 x86_repnz_prefix = 0xf2
-x86_repz_prefix = 0xf3 
+x86_repz_prefix = 0xf3
 x86_rep_prefix = 0xf3
 x86_cs_prefix = 0x2e
 x86_ss_prefix = 0x36
@@ -372,52 +372,52 @@ x86_address_prefix = 0x67
 -- | Mapping from condition code to opcode (unsigned)
 x86_cc_unsigned_map :: [Word8]
 x86_cc_unsigned_map = [
-       0x74, -- eq  
-       0x75, -- ne  
-       0x72, -- lt  
-       0x76, -- le  
-       0x77, -- gt  
-       0x73, -- ge  
-       0x78, -- lz  
-       0x79, -- gez 
-       0x7a, -- p   
-       0x7b, -- np  
-       0x70, -- o  
-       0x71  -- no  
+       0x74, -- eq
+       0x75, -- ne
+       0x72, -- lt
+       0x76, -- le
+       0x77, -- gt
+       0x73, -- ge
+       0x78, -- lz
+       0x79, -- gez
+       0x7a, -- p
+       0x7b, -- np
+       0x70, -- o
+       0x71  -- no
  ]
 
 -- | Mapping from condition code to opcode (signed)
 x86_cc_signed_map :: [Word8]
 x86_cc_signed_map = [
-      0x74, -- eq  
-      0x75, -- ne  
-      0x7c, -- lt  
-      0x7e, -- le  
-      0x7f, -- gt  
-      0x7d, -- ge  
-      0x78, -- lz  
-      0x79, -- gez 
-      0x7a, -- p   
-      0x7b, -- np  
-      0x70, -- o  
-      0x71  -- no  
+      0x74, -- eq
+      0x75, -- ne
+      0x7c, -- lt
+      0x7e, -- le
+      0x7f, -- gt
+      0x7d, -- ge
+      0x78, -- lz
+      0x79, -- gez
+      0x7a, -- p
+      0x7b, -- np
+      0x70, -- o
+      0x71  -- no
  ]
 
 -- | Mapping from condition code to negated condition code.
 x86_cc_negate :: [(Int, Int)]
 x86_cc_negate = [
-       (x86_cc_eq, x86_cc_ne), -- eq  
-       (x86_cc_ne, x86_cc_eq), -- ne  
-       (x86_cc_lt, x86_cc_ge), -- lt  
-       (x86_cc_le, x86_cc_gt), -- le  
-       (x86_cc_gt, x86_cc_le), -- gt  
-       (x86_cc_ge, x86_cc_lt), -- ge  
-       (x86_cc_lz, x86_cc_gez), -- lz  
-       (x86_cc_gez, x86_cc_lz), -- gez 
-       (x86_cc_p, x86_cc_np), -- p   
-       (x86_cc_np, x86_cc_p), -- np  
-       (x86_cc_o, x86_cc_no), -- o  
-       (x86_cc_no, x86_cc_o)  -- no  
+       (x86_cc_eq, x86_cc_ne), -- eq
+       (x86_cc_ne, x86_cc_eq), -- ne
+       (x86_cc_lt, x86_cc_ge), -- lt
+       (x86_cc_le, x86_cc_gt), -- le
+       (x86_cc_gt, x86_cc_le), -- gt
+       (x86_cc_ge, x86_cc_lt), -- ge
+       (x86_cc_lz, x86_cc_gez), -- lz
+       (x86_cc_gez, x86_cc_lz), -- gez
+       (x86_cc_p, x86_cc_np), -- p
+       (x86_cc_np, x86_cc_p), -- np
+       (x86_cc_o, x86_cc_no), -- o
+       (x86_cc_no, x86_cc_o)  -- no
  ]
 
 -- | Invert a condition code.
@@ -444,22 +444,22 @@ x86_edx_mask = (1 `shiftL` (fromIntegral x86_edx))
 
 -- | Bitvector mask for callee-saved registers
 x86_callee_regs :: Int
-x86_callee_regs = ((1 `shiftL` (fromIntegral x86_eax)) .|. 
-           (1 `shiftL` (fromIntegral x86_ecx)) .|. 
+x86_callee_regs = ((1 `shiftL` (fromIntegral x86_eax)) .|.
+           (1 `shiftL` (fromIntegral x86_ecx)) .|.
            (1 `shiftL` (fromIntegral x86_edx)))
 
 -- | Bitvector mask for caller-saved registers
 x86_caller_regs :: Int
 x86_caller_regs = ((1 `shiftL` (fromIntegral x86_ebx)) .|.
-           (1 `shiftL` (fromIntegral x86_ebp)) .|. 
-           (1 `shiftL` (fromIntegral x86_esi)) .|. 
+           (1 `shiftL` (fromIntegral x86_ebp)) .|.
+           (1 `shiftL` (fromIntegral x86_esi)) .|.
            (1 `shiftL` (fromIntegral x86_edi)))
 
 -- | Bitvector mask for byte-adressable registers
 x86_byte_regs :: Int
 x86_byte_regs =  ((1 `shiftL` (fromIntegral x86_eax)) .|.
-          (1 `shiftL` (fromIntegral x86_ecx)) .|. 
-          (1 `shiftL` (fromIntegral x86_edx)) .|. 
+          (1 `shiftL` (fromIntegral x86_ecx)) .|.
+          (1 `shiftL` (fromIntegral x86_edx)) .|.
           (1 `shiftL` (fromIntegral x86_ebx)))
 
 -- | Returns true when the given register is caller-saved.
@@ -487,7 +487,7 @@ x86_is_byte_reg reg = ((reg) < 4)
 
 x86_address_byte :: Word8 -> Word8 -> Word8 -> CodeGen e s ()
 x86_address_byte m o r = emit8 ((((m) .&. 0x03) `shiftL` 6) .|.
-                               (((o) .&. 0x07) `shiftL` 3) .|. 
+                               (((o) .&. 0x07) `shiftL` 3) .|.
                                 (((r) .&. 0x07)))
 
 -- | Emit a 32-bit constant to the instruction stream.
@@ -508,7 +508,7 @@ x86_imm_emit16 imm =
 
 -- | Emit a 8-bit constant to the instruction stream.
 x86_imm_emit8 :: Word8 -> CodeGen e s ()
-x86_imm_emit8 imm = 
+x86_imm_emit8 imm =
   emit8 (imm .&. 0xff)
 
 -- -- | Emit a 8-bit constant to the instruction stream at the given offset.
@@ -519,15 +519,15 @@ x86_imm_emit8 imm =
 x86_is_imm8 :: Integral a => a -> Bool
 x86_is_imm8 imm =  (((fromIntegral imm :: Integer) >= -128) && ((fromIntegral imm :: Integer) <= 127))
 -- x86_is_imm16 :: Integral a => a -> Bool
--- x86_is_imm16 imm = (((fromIntegral imm :: Integer) >= -(1 `shiftL` 16)) && 
+-- x86_is_imm16 imm = (((fromIntegral imm :: Integer) >= -(1 `shiftL` 16)) &&
 --                               ((fromIntegral imm :: Integer) <= ((1 `shiftL` 16)-1)))
 
 x86_reg_emit :: Word8 -> Word8 -> CodeGen e s ()
 x86_reg_emit r regno = x86_address_byte 3 r regno
 
 x86_reg8_emit :: Word8 -> Word8 -> Bool -> Bool -> CodeGen e s ()
-x86_reg8_emit r regno is_rh is_rnoh = 
-  x86_address_byte 3 (if is_rh then (r .|. 4) else r) 
+x86_reg8_emit r regno is_rh is_rnoh =
+  x86_address_byte 3 (if is_rh then (r .|. 4) else r)
                      (if is_rnoh then regno .|. 4 else regno)
 
 -- | Emit a register-indirect address encoding.
@@ -544,7 +544,7 @@ x86_membase_emit :: Word8 -> Word8 -> Word32 -> CodeGen e s ()
 x86_membase_emit r basereg disp =
     if basereg == x86_esp
        then if disp == 0
-               then do x86_address_byte 0 r x86_esp 
+               then do x86_address_byte 0 r x86_esp
                        x86_address_byte 0 x86_esp x86_esp
                else if x86_is_imm8 disp
                        then do x86_address_byte 1 r x86_esp
@@ -572,7 +572,7 @@ x86_memindex_emit r basereg disp indexreg shft =
                        x86_address_byte shft indexreg (fromIntegral basereg)
                 else if x86_is_imm8 disp
                         then do x86_address_byte 1 r 4
-                                x86_address_byte shft indexreg 
+                                x86_address_byte shft indexreg
                                              (fromIntegral basereg)
                                 x86_imm_emit8 (fromIntegral disp)
                         else do x86_address_byte 2 r 4
@@ -618,12 +618,12 @@ x86_patch ins target =
           let disp = target - (if instr == 0x0f then pos + 1 else pos)
           if size == 1
              then x86_imm_emit32_at pos (fromIntegral (disp - 4))
-             else if (x86_is_imm8 (disp - 1)) 
+             else if (x86_is_imm8 (disp - 1))
                      then x86_imm_emit8_at pos (fromIntegral (disp - 1))
                      else failCodeGen (PP.text "Wrong offset")
 -}
 
-x86_breakpoint, x86_cld, x86_stosb, x86_stosl, x86_stosd, x86_movsb, 
+x86_breakpoint, x86_cld, x86_stosb, x86_stosl, x86_stosd, x86_movsb,
  x86_movsl, x86_movsd :: CodeGen s e ()
 x86_breakpoint = emit8 0xcc
 x86_cld = emit8 0xfc
@@ -641,7 +641,7 @@ x86_rdtsc :: CodeGen s e ()
 x86_rdtsc = emit8 0x0f >> emit8 0x31
 
 x86_cmpxchg_reg_reg :: Word8 -> Word8 -> CodeGen e s ()
-x86_cmpxchg_reg_reg dreg reg = 
+x86_cmpxchg_reg_reg dreg reg =
     emit8 0x0f >> emit8 0xb1 >> x86_reg_emit reg dreg
 
 x86_cmpxchg_mem_reg :: Word32 -> Word8 -> CodeGen e s ()
@@ -792,82 +792,82 @@ x86_shift_membase opc basereg disp =
 
 -- Multi op shift missing.
 
-x86_shrd_reg dreg reg =                     
-    emit8 0x0f >> emit8 0xad >> x86_reg_emit reg dreg 
+x86_shrd_reg dreg reg =
+    emit8 0x0f >> emit8 0xad >> x86_reg_emit reg dreg
 x86_shrd_reg_imm dreg reg shamt =
     emit8 0x0f >> emit8 0xac >> x86_reg_emit reg dreg >> x86_imm_emit8 shamt
-x86_shld_reg dreg reg =                     
-    emit8 0x0f >> emit8 0xa5 >> x86_reg_emit reg dreg 
+x86_shld_reg dreg reg =
+    emit8 0x0f >> emit8 0xa5 >> x86_reg_emit reg dreg
 x86_shld_reg_imm dreg reg shamt =
     emit8 0x0f >> emit8 0xa4 >> x86_reg_emit reg dreg >>x86_imm_emit8 shamt
 
 -- EDX:EAX = EAX * rm
 
 x86_mul_reg :: Word8 -> Bool -> CodeGen e s ()
-x86_mul_reg reg is_signed =   
-    emit8 0xf7 >> x86_reg_emit (4 + (if is_signed then 1 else 0)) reg 
+x86_mul_reg reg is_signed =
+    emit8 0xf7 >> x86_reg_emit (4 + (if is_signed then 1 else 0)) reg
 
 x86_mul_mem :: Word32 -> Bool -> CodeGen e s ()
-x86_mul_mem mem is_signed =   
-    emit8 0xf7 >> x86_mem_emit (4 + (if is_signed then 1 else 0)) mem 
+x86_mul_mem mem is_signed =
+    emit8 0xf7 >> x86_mem_emit (4 + (if is_signed then 1 else 0)) mem
 
 x86_mul_membase :: Word8 -> Word32 -> Bool -> CodeGen e s ()
-x86_mul_membase basereg disp is_signed =      
+x86_mul_membase basereg disp is_signed =
     do emit8 0xf7
        x86_membase_emit (4 + (if is_signed then 1 else 0)) basereg disp
 
 -- r *= rm
 
 x86_imul_reg_reg :: Word8 -> Word8 -> CodeGen e s ()
-x86_imul_reg_reg dreg reg =   
-    emit8 0x0f >> emit8 0xaf >> x86_reg_emit dreg reg 
+x86_imul_reg_reg dreg reg =
+    emit8 0x0f >> emit8 0xaf >> x86_reg_emit dreg reg
 
 x86_imul_reg_mem :: Word8 -> Word32 -> CodeGen e s ()
-x86_imul_reg_mem reg mem =    
-    emit8 0x0f >> emit8 0xaf >> x86_mem_emit reg mem  
+x86_imul_reg_mem reg mem =
+    emit8 0x0f >> emit8 0xaf >> x86_mem_emit reg mem
 
 x86_imul_reg_membase :: Word8 -> Word8 -> Word32 -> CodeGen e s ()
-x86_imul_reg_membase reg basereg disp =       
-    emit8 0x0f >> emit8 0xaf >> x86_membase_emit reg basereg disp     
+x86_imul_reg_membase reg basereg disp =
+    emit8 0x0f >> emit8 0xaf >> x86_membase_emit reg basereg disp
 
 -- dreg = rm * imm
 
 x86_imul_reg_reg_imm :: Word8 -> Word8 -> Word32 -> CodeGen e s ()
-x86_imul_reg_reg_imm dreg reg imm =   
+x86_imul_reg_reg_imm dreg reg imm =
     if x86_is_imm8 imm
-       then emit8 0x6b >> x86_reg_emit dreg reg >> 
-              x86_imm_emit8 (fromIntegral imm)        
-       else emit8 0x69 >> x86_reg_emit dreg reg >> x86_imm_emit32 imm 
+       then emit8 0x6b >> x86_reg_emit dreg reg >>
+              x86_imm_emit8 (fromIntegral imm)
+       else emit8 0x69 >> x86_reg_emit dreg reg >> x86_imm_emit32 imm
 
 x86_imul_reg_mem_imm :: Word8 -> Word32 -> Word32 -> CodeGen e s ()
-x86_imul_reg_mem_imm reg mem imm =    
+x86_imul_reg_mem_imm reg mem imm =
     if x86_is_imm8 imm
-       then emit8 0x6b >> x86_mem_emit reg mem >> 
-              x86_imm_emit8 (fromIntegral imm)        
-       else emit8 0x69 >> x86_reg_emit reg (fromIntegral mem) >> 
-              x86_imm_emit32 imm      
+       then emit8 0x6b >> x86_mem_emit reg mem >>
+              x86_imm_emit8 (fromIntegral imm)
+       else emit8 0x69 >> x86_reg_emit reg (fromIntegral mem) >>
+              x86_imm_emit32 imm
 
 x86_imul_reg_membase_imm :: Word8 -> Word8 -> Word32 -> Word32 -> CodeGen e s ()
-x86_imul_reg_membase_imm reg basereg disp imm =       
+x86_imul_reg_membase_imm reg basereg disp imm =
     if x86_is_imm8 imm
-       then emit8 0x6b >> x86_membase_emit reg basereg disp >> 
+       then emit8 0x6b >> x86_membase_emit reg basereg disp >>
             x86_imm_emit8 (fromIntegral imm)
        else do emit8 0x69
-               x86_membase_emit reg basereg disp      
-               x86_imm_emit32 imm     
+               x86_membase_emit reg basereg disp
+               x86_imm_emit32 imm
 
 -- divide EDX:EAX by rm;
 -- eax = quotient, edx = remainder
 
 x86_div_reg :: Word8 -> Bool -> CodeGen e s ()
-x86_div_reg reg is_signed =   
-    emit8 0xf7 >> x86_reg_emit (6 + (if is_signed then 1 else 0)) reg 
+x86_div_reg reg is_signed =
+    emit8 0xf7 >> x86_reg_emit (6 + (if is_signed then 1 else 0)) reg
 x86_div_mem :: Word32 -> Bool -> CodeGen e s ()
-x86_div_mem mem is_signed =   
-    emit8 0xf7 >> x86_mem_emit (6 + (if is_signed then 1 else 0)) mem 
+x86_div_mem mem is_signed =
+    emit8 0xf7 >> x86_mem_emit (6 + (if is_signed then 1 else 0)) mem
 
 x86_div_membase :: Word8 -> Word32 -> Bool -> CodeGen e s ()
-x86_div_membase basereg disp is_signed =      
+x86_div_membase basereg disp is_signed =
     do emit8 0xf7
        x86_membase_emit (6 + (if is_signed then 1 else 0)) basereg disp
 
@@ -878,7 +878,7 @@ x86_mov1 size =
          2 -> emit8 0x66 >> emit8 0x89
          4 -> emit8 0x89
          _ -> failCodeGen (PP.text "invalid operand size")
-       
+
 x86_mov2 :: (Eq t, Num t) => t -> CodeGen e s ()
 x86_mov2 size =
     case size of
@@ -886,112 +886,112 @@ x86_mov2 size =
          2 -> emit8 0x66 >> emit8 0x8b
          4 -> emit8 0x8b
          _ -> failCodeGen (PP.text "invalid operand size")
-       
+
 x86_mov_mem_reg :: (Eq t, Num t) => Word32 -> Word8 -> t -> CodeGen e s ()
-x86_mov_mem_reg mem reg size =        
-    do x86_mov1 size ; x86_mem_emit reg mem   
+x86_mov_mem_reg mem reg size =
+    do x86_mov1 size ; x86_mem_emit reg mem
 
 x86_mov_regp_reg :: (Eq t, Num t) => Word8 -> Word8 -> t -> CodeGen e s ()
-x86_mov_regp_reg regp reg size =      
+x86_mov_regp_reg regp reg size =
     do x86_mov1 size ; x86_regp_emit reg regp
 
 x86_mov_reg_regp :: (Eq t, Num t) => Word8 -> Word8 -> t -> CodeGen e s ()
-x86_mov_reg_regp reg regp size =      
+x86_mov_reg_regp reg regp size =
     do x86_mov2 size ; x86_regp_emit reg regp
 
 x86_mov_membase_reg :: (Eq t, Num t) => Word8 -> Word32 -> Word8 -> t -> CodeGen e s ()
-x86_mov_membase_reg basereg disp reg size =   
-    do x86_mov1 size ; x86_membase_emit reg basereg disp      
+x86_mov_membase_reg basereg disp reg size =
+    do x86_mov1 size ; x86_membase_emit reg basereg disp
 
 x86_mov_memindex_reg :: (Eq t, Num t) => Word8 -> Word32 -> Word8 -> Word8 -> Word8 -> t -> CodeGen e s ()
-x86_mov_memindex_reg basereg disp indexreg shft reg size =   
+x86_mov_memindex_reg basereg disp indexreg shft reg size =
     do x86_mov1 size ; x86_memindex_emit reg basereg disp indexreg shft
 
 x86_mov_reg_reg :: (Eq t, Num t) => Word8 -> Word8 -> t -> CodeGen e s ()
-x86_mov_reg_reg dreg reg size =       
+x86_mov_reg_reg dreg reg size =
     do x86_mov2 size
-       x86_reg_emit dreg reg  
+       x86_reg_emit dreg reg
 
 x86_mov_reg_mem :: (Eq t, Num t) => Word8 -> Word32 -> t -> CodeGen e s ()
-x86_mov_reg_mem reg mem size =        
+x86_mov_reg_mem reg mem size =
     do x86_mov2 size
-       x86_mem_emit reg mem   
+       x86_mem_emit reg mem
 
 x86_mov_reg_membase :: (Eq t, Num t) => Word8 -> Word8 -> Word32 -> t -> CodeGen e s ()
 x86_mov_reg_membase reg basereg disp size =
     do x86_mov2 size
-       x86_membase_emit reg basereg disp      
+       x86_membase_emit reg basereg disp
 
 x86_mov_reg_memindex :: (Eq t, Num t) => Word8 -> Word8 -> Word32 -> Word8 -> Word8 -> t -> CodeGen e s ()
 x86_mov_reg_memindex _ _ _ 4 _ _ =
     failCodeGen $ PP.text "x86_mov_reg_memindex: cannot use (E)SP as index register"
-x86_mov_reg_memindex reg basereg disp indexreg shft size =   
+x86_mov_reg_memindex reg basereg disp indexreg shft size =
     do x86_mov2 size
        x86_memindex_emit reg basereg disp indexreg  shft
 
 x86_mov_reg_imm :: Word8 -> Word32 -> CodeGen e s ()
-x86_mov_reg_imm reg imm =     
-    emit8 (0xb8 + reg) >> x86_imm_emit32 imm  
+x86_mov_reg_imm reg imm =
+    emit8 (0xb8 + reg) >> x86_imm_emit32 imm
 
 x86_mov_mem_imm :: (Eq a, Num a) => Word32 -> Word32 -> a -> CodeGen e s ()
-x86_mov_mem_imm mem imm size =        
+x86_mov_mem_imm mem imm size =
     if size == 1
-       then do emit8 0xc6;    
-               x86_mem_emit 0 mem     
-               x86_imm_emit8 (fromIntegral imm)       
+       then do emit8 0xc6;
+               x86_mem_emit 0 mem
+               x86_imm_emit8 (fromIntegral imm)
        else if size == 2
                then do emit8 0x66
                        emit8 0xc7
-                       x86_mem_emit 0 mem     
-                       x86_imm_emit16 (fromIntegral imm)      
+                       x86_mem_emit 0 mem
+                       x86_imm_emit16 (fromIntegral imm)
                else do emit8 0xc7
-                       x86_mem_emit 0 mem     
-                       x86_imm_emit32 imm     
+                       x86_mem_emit 0 mem
+                       x86_imm_emit32 imm
 
 x86_mov_membase_imm :: (Eq a, Num a) => Word8 -> Word32 -> Word32 -> a -> CodeGen e s ()
-x86_mov_membase_imm basereg disp imm size =   
+x86_mov_membase_imm basereg disp imm size =
     if size == 1
-       then do emit8 0xc6     
+       then do emit8 0xc6
                x86_membase_emit 0 basereg disp
                x86_imm_emit8 (fromIntegral imm)
        else if size == 2
-               then do emit8 0x66     
+               then do emit8 0x66
                        emit8 0xc7
-                       x86_membase_emit 0 basereg disp        
-                       x86_imm_emit16 (fromIntegral imm)      
-               else do emit8 0xc7     
-                       x86_membase_emit 0 basereg disp        
-                       x86_imm_emit32 imm     
+                       x86_membase_emit 0 basereg disp
+                       x86_imm_emit16 (fromIntegral imm)
+               else do emit8 0xc7
+                       x86_membase_emit 0 basereg disp
+                       x86_imm_emit32 imm
 
 x86_mov_memindex_imm :: (Eq a, Num a) => Word8 -> Word32 -> Word8 -> Word8 -> Word32 -> a -> CodeGen e s ()
-x86_mov_memindex_imm basereg disp indexreg shft imm size =   
+x86_mov_memindex_imm basereg disp indexreg shft imm size =
     if size == 1
-    then do emit8 0xc6        
-            x86_memindex_emit 0 basereg disp indexreg  shft  
-            x86_imm_emit8 (fromIntegral imm)  
+    then do emit8 0xc6
+            x86_memindex_emit 0 basereg disp indexreg  shft
+            x86_imm_emit8 (fromIntegral imm)
     else if size == 2
-         then do emit8 0x66   
-                 emit8 0xc7   
-                 x86_memindex_emit 0 basereg disp indexreg  shft     
-                 x86_imm_emit16 (fromIntegral imm)    
-         else do emit8 0xc7   
-                 x86_memindex_emit 0 basereg disp indexreg  shft     
-                 x86_imm_emit32 imm   
+         then do emit8 0x66
+                 emit8 0xc7
+                 x86_memindex_emit 0 basereg disp indexreg  shft
+                 x86_imm_emit16 (fromIntegral imm)
+         else do emit8 0xc7
+                 x86_memindex_emit 0 basereg disp indexreg  shft
+                 x86_imm_emit32 imm
 
 -- LEA: Load Effective Address
 
 x86_lea_mem :: Word8 -> Word32 -> CodeGen e s ()
-x86_lea_mem reg mem = emit8 0x8d >> x86_mem_emit reg mem      
+x86_lea_mem reg mem = emit8 0x8d >> x86_mem_emit reg mem
 
 x86_lea_membase :: Word8 -> Word8 -> Word32 -> CodeGen e s ()
-x86_lea_membase reg basereg disp =    
-    emit8 0x8d >> x86_membase_emit reg basereg disp   
+x86_lea_membase reg basereg disp =
+    emit8 0x8d >> x86_membase_emit reg basereg disp
 
 x86_lea_memindex :: Word8 -> Word8 -> Word32 -> Word8 -> Word8 -> CodeGen e s ()
 x86_lea_memindex reg basereg disp indexreg shft =
-    emit8 0x8d >> x86_memindex_emit reg basereg disp indexreg shft   
+    emit8 0x8d >> x86_memindex_emit reg basereg disp indexreg shft
 
-x86_widen_reg :: Word8 -> Word8 -> Bool -> Bool -> CodeGen e s () 
+x86_widen_reg :: Word8 -> Word8 -> Bool -> Bool -> CodeGen e s ()
 x86_widen_reg dreg reg is_signed is_half =
     if is_half || x86_is_byte_reg reg
     then do let op = 0xb6 + (if is_signed then 0x08 else 0) +
@@ -1007,15 +1007,15 @@ x86_widen_mem dreg mem is_signed is_half =
                 (if is_half then 0x1 else 0)
        emit8 0x0f
        emit8 op
-       x86_mem_emit dreg mem  
+       x86_mem_emit dreg mem
 
 x86_widen_membase :: Word8 -> Word8 -> Word32 -> Bool -> Bool -> CodeGen e s ()
-x86_widen_membase dreg basereg disp is_signed is_half =       
+x86_widen_membase dreg basereg disp is_signed is_half =
     do let op = 0xb6 + (if is_signed then 0x08 else 0) +
                 (if is_half then 0x1 else 0)
        emit8 0x0f
        emit8 op
-       x86_membase_emit dreg basereg disp     
+       x86_membase_emit dreg basereg disp
 
 x86_widen_memindex :: Word8 -> Word8 -> Word32 -> Word8 -> Word8 -> Bool -> Bool -> CodeGen e s ()
 x86_widen_memindex dreg basereg disp indexreg shft is_signed is_half =
@@ -1023,28 +1023,28 @@ x86_widen_memindex dreg basereg disp indexreg shft is_signed is_half =
                 (if is_half then 0x1 else 0)
        emit8 0x0f
        emit8 op
-       x86_memindex_emit dreg basereg disp indexreg shft     
+       x86_memindex_emit dreg basereg disp indexreg shft
 
 x86_cdq, x86_wait :: CodeGen s e ()
 x86_cdq  = emit8 0x99
 x86_wait = emit8 0x9b
 
 x86_fp_op_mem :: Word8 -> Word32 -> Bool -> CodeGen e s ()
-x86_fp_op_mem opc mem is_double =     
-    do emit8 (if is_double then 0xdc else 0xd8)       
+x86_fp_op_mem opc mem is_double =
+    do emit8 (if is_double then 0xdc else 0xd8)
        x86_mem_emit opc mem
 x86_fp_op_membase :: Word8 -> Word8 -> Word32 -> Bool -> CodeGen e s ()
-x86_fp_op_membase opc basereg disp is_double =        
-    do emit8 (if is_double then 0xdc else 0xd8)       
-       x86_membase_emit opc basereg disp      
+x86_fp_op_membase opc basereg disp is_double =
+    do emit8 (if is_double then 0xdc else 0xd8)
+       x86_membase_emit opc basereg disp
 x86_fp_op ::Word8 -> Word8 -> CodeGen e s ()
-x86_fp_op opc index = 
+x86_fp_op opc index =
     do emit8 0xd8
        emit8 (0xc0 + (opc `shiftL` 3) + (index .&. 0x07))
 x86_fp_op_reg :: Word8 -> Word8 -> Bool -> CodeGen e s ()
-x86_fp_op_reg opc index pop_stack =   
-    do let  opcMap = [ 0, 1, 2, 3, 5, 4, 7, 6, 8]        
-       emit8 (if pop_stack then 0xde else 0xdc)       
+x86_fp_op_reg opc index pop_stack =
+    do let  opcMap = [ 0, 1, 2, 3, 5, 4, 7, 6, 8]
+       emit8 (if pop_stack then 0xde else 0xdc)
        emit8 (0xc0 + ((opcMap !! fromIntegral opc) `shiftL` 3) + (index .&. 0x07))
 
 
@@ -1056,37 +1056,37 @@ x86_fp_op_reg opc index pop_stack =
 
 x86_fp_int_op_membase :: Word8 -> Word8 -> Word32 -> Bool -> CodeGen e s ()
 x86_fp_int_op_membase opc basereg disp is_int =
-    do emit8 (if is_int then 0xda else 0xde)  
-       x86_membase_emit opc basereg disp      
+    do emit8 (if is_int then 0xda else 0xde)
+       x86_membase_emit opc basereg disp
 x86_fstp :: Word8 -> CodeGen e s ()
-x86_fstp index =      
-    emit8 0xdd >> emit8 (0xd8 + index)        
+x86_fstp index =
+    emit8 0xdd >> emit8 (0xd8 + index)
 x86_fcompp :: CodeGen e s ()
-x86_fcompp = emit8 0xde >> emit8 0xd9 
+x86_fcompp = emit8 0xde >> emit8 0xd9
 x86_fucompp :: CodeGen e s ()
-x86_fucompp = emit8 0xda >> emit8 0xe9        
+x86_fucompp = emit8 0xda >> emit8 0xe9
 x86_fnstsw :: CodeGen e s ()
-x86_fnstsw = emit8 0xdf >> emit8 0xe0 
+x86_fnstsw = emit8 0xdf >> emit8 0xe0
 x86_fnstcw :: Word32 -> CodeGen e s ()
-x86_fnstcw mem = emit8 0xd9 >> x86_mem_emit 7 mem     
+x86_fnstcw mem = emit8 0xd9 >> x86_mem_emit 7 mem
 x86_fnstcw_membase :: Word8 -> Word32 -> CodeGen e s ()
-x86_fnstcw_membase basereg disp =     
-    emit8 0xd9 >> x86_membase_emit 7 basereg disp     
+x86_fnstcw_membase basereg disp =
+    emit8 0xd9 >> x86_membase_emit 7 basereg disp
 x86_fldcw :: Word32 -> CodeGen e s ()
-x86_fldcw mem = emit8 0xd9 >> x86_mem_emit 5 mem      
+x86_fldcw mem = emit8 0xd9 >> x86_mem_emit 5 mem
 x86_fldcw_membase :: Word8 -> Word32 -> CodeGen e s ()
-x86_fldcw_membase basereg disp =      
-    emit8 0xd9 >> x86_membase_emit 5 basereg disp     
+x86_fldcw_membase basereg disp =
+    emit8 0xd9 >> x86_membase_emit 5 basereg disp
 x86_fchs :: CodeGen e s ()
-x86_fchs = emit8 0xd9 >> emit8 0xe0   
+x86_fchs = emit8 0xd9 >> emit8 0xe0
 x86_frem :: CodeGen e s ()
 x86_frem = emit8 0xd9 >> emit8 0xf8
 x86_fxch :: Word8 -> CodeGen e s ()
-x86_fxch index = emit8 0xd9 >> emit8 (0xc8 + (index .&. 0x07))        
+x86_fxch index = emit8 0xd9 >> emit8 (0xc8 + (index .&. 0x07))
 x86_fcomi :: Word8 -> CodeGen e s ()
-x86_fcomi index = emit8 0xdb >> emit8 (0xf0 + (index .&. 0x07))       
+x86_fcomi index = emit8 0xdb >> emit8 (0xf0 + (index .&. 0x07))
 x86_fcomip :: Word8 -> CodeGen e s ()
-x86_fcomip index = emit8 0xdf >> emit8 (0xf0 + (index .&. 0x07))      
+x86_fcomip index = emit8 0xdf >> emit8 (0xf0 + (index .&. 0x07))
 x86_fucomi :: Word8 -> CodeGen e s ()
 x86_fucomi index = emit8 0xdb >> emit8 (0xe8 + (index .&. 0x07))
 x86_fucomip :: Word8 -> CodeGen e s ()
@@ -1095,18 +1095,18 @@ x86_fucomip index = emit8 0xdf >> emit8 (0xe8 + (index .&. 0x07))
 data FIntSize = FInt16 | FInt32 | FInt64
 
 x86_fld :: Word32 -> Bool -> CodeGen e s ()
-x86_fld mem is_double =       
-    do emit8 (if is_double then 0xdd else 0xd9)       
-       x86_mem_emit 0 mem     
+x86_fld mem is_double =
+    do emit8 (if is_double then 0xdd else 0xd9)
+       x86_mem_emit 0 mem
 x86_fld_membase :: Word8 -> Word32 -> Bool -> CodeGen e s ()
-x86_fld_membase basereg disp is_double =      
-    do emit8 (if is_double then 0xdd else 0xd9)       
-       x86_membase_emit 0 basereg disp        
+x86_fld_membase basereg disp is_double =
+    do emit8 (if is_double then 0xdd else 0xd9)
+       x86_membase_emit 0 basereg disp
 x86_fld80_mem :: Word32 -> CodeGen e s ()
-x86_fld80_mem mem = emit8 0xdb >> x86_mem_emit 5 mem  
+x86_fld80_mem mem = emit8 0xdb >> x86_mem_emit 5 mem
 x86_fld80_membase :: Word8 -> Word32 -> CodeGen e s ()
-x86_fld80_membase basereg disp =      
-    emit8 0xdb >> x86_membase_emit 5 basereg disp     
+x86_fld80_membase basereg disp =
+    emit8 0xdb >> x86_membase_emit 5 basereg disp
 x86_fild :: Word32 -> FIntSize -> CodeGen e s ()
 x86_fild mem size =
     case size of
@@ -1116,32 +1116,32 @@ x86_fild mem size =
 x86_fild_membase :: Word8 -> Word32 -> FIntSize -> CodeGen e s ()
 x86_fild_membase basereg disp size =
     case size of
-       FInt16 -> emit8 0xdb >> x86_membase_emit 0 basereg disp     
-       FInt32 -> emit8 0xdb >> x86_membase_emit 0 basereg disp     
-       FInt64 -> emit8 0xdf >> x86_membase_emit 5 basereg disp     
+       FInt16 -> emit8 0xdb >> x86_membase_emit 0 basereg disp
+       FInt32 -> emit8 0xdb >> x86_membase_emit 0 basereg disp
+       FInt64 -> emit8 0xdf >> x86_membase_emit 5 basereg disp
 x86_fld_reg :: Word8 -> CodeGen e s ()
-x86_fld_reg index =   
+x86_fld_reg index =
     emit8 0xd9 >> emit8 (0xc0 + (index .&. 0x07))
 x86_fldz :: CodeGen e s ()
-x86_fldz = emit8 0xd9 >> emit8 0xee   
+x86_fldz = emit8 0xd9 >> emit8 0xee
 x86_fld1 :: CodeGen e s ()
 x86_fld1 = emit8 0xd9 >> emit8 0xe8
 x86_fldpi :: CodeGen e s ()
-x86_fldpi = emit8 0xd9 >> emit8 0xeb  
+x86_fldpi = emit8 0xd9 >> emit8 0xeb
 
 x86_fst :: Word32 -> Bool -> Bool -> CodeGen e s ()
-x86_fst mem is_double pop_stack =     
+x86_fst mem is_double pop_stack =
     do emit8 (if is_double then 0xdd else 0xd9)
-       x86_mem_emit (2 + (if pop_stack then 1 else 0)) mem    
+       x86_mem_emit (2 + (if pop_stack then 1 else 0)) mem
 x86_fst_membase :: Word8 -> Word32 -> Bool -> Bool -> CodeGen e s ()
-x86_fst_membase basereg disp is_double pop_stack =    
-    do emit8 (if is_double then 0xdd else 0xd9)       
+x86_fst_membase basereg disp is_double pop_stack =
+    do emit8 (if is_double then 0xdd else 0xd9)
        x86_membase_emit (2 + (if pop_stack then 1 else 0)) basereg disp
 x86_fst80_mem :: Word32 -> CodeGen e s ()
-x86_fst80_mem mem = emit8 0xdb >> x86_mem_emit 7 mem  
+x86_fst80_mem mem = emit8 0xdb >> x86_mem_emit 7 mem
 x86_fst80_membase :: Word8 -> Word32 -> CodeGen e s ()
-x86_fst80_membase basereg disp =      
-    emit8 0xdb >> x86_membase_emit 7 basereg disp     
+x86_fst80_membase basereg disp =
+    emit8 0xdb >> x86_membase_emit 7 basereg disp
 x86_fist_pop :: Word32 -> FIntSize -> CodeGen e s ()
 x86_fist_pop mem size =
     case size of
@@ -1163,32 +1163,32 @@ x86_fstsw = emit8 0x9b >> emit8 0xdf >> emit8 0xe0
 -- size specifies whether destination is int32 or int16.
 
 x86_fist_membase :: Word8 -> Word32 -> FIntSize -> CodeGen e s ()
-x86_fist_membase basereg disp size =        
+x86_fist_membase basereg disp size =
     case size of
-       FInt16 -> emit8 0xdf >> x86_membase_emit 2 basereg disp     
-       FInt32 -> emit8 0xdb >> x86_membase_emit 2 basereg disp     
+       FInt16 -> emit8 0xdf >> x86_membase_emit 2 basereg disp
+       FInt32 -> emit8 0xdb >> x86_membase_emit 2 basereg disp
        FInt64 -> error "fist does not support 64 bit access"
 
 x86_fincstp :: CodeGen e s ()
-x86_fincstp = emit8 0xd9 >> emit8 0xf7 
+x86_fincstp = emit8 0xd9 >> emit8 0xf7
 
 x86_fdecstp :: CodeGen e s ()
-x86_fdecstp = emit8 0xd9 >> emit8 0xf6 
+x86_fdecstp = emit8 0xd9 >> emit8 0xf6
 
 -- PUSH instruction.
 
 x86_push_reg :: Word8 -> CodeGen e s ()
-x86_push_reg reg = emit8 (0x50 + reg) 
+x86_push_reg reg = emit8 (0x50 + reg)
 
 x86_push_regp :: Word8 -> CodeGen e s ()
-x86_push_regp reg = emit8 0xff >> x86_regp_emit 6 reg 
+x86_push_regp reg = emit8 0xff >> x86_regp_emit 6 reg
 
 x86_push_mem :: Word32 -> CodeGen e s ()
-x86_push_mem mem = emit8 0xff >> x86_mem_emit 6 mem   
+x86_push_mem mem = emit8 0xff >> x86_mem_emit 6 mem
 
 x86_push_membase :: Word8 -> Word32 -> CodeGen e s ()
-x86_push_membase basereg disp = 
-    emit8 0xff >> x86_membase_emit 6 basereg disp     
+x86_push_membase basereg disp =
+    emit8 0xff >> x86_membase_emit 6 basereg disp
 
 x86_push_memindex :: Word8 -> Word32 -> Word8 -> Word8 -> CodeGen e s ()
 x86_push_memindex basereg disp indexreg shft =
@@ -1198,7 +1198,7 @@ x86_push_imm_template :: CodeGen e s ()
 x86_push_imm_template = x86_push_imm 0xf0f0f0f0
 
 x86_push_imm :: Word32 -> CodeGen e s ()
-x86_push_imm imm =    
+x86_push_imm imm =
     if x86_is_imm8 imm
     then emit8 0x6A >> x86_imm_emit8 (fromIntegral imm)
     else emit8 0x68 >> x86_imm_emit32 imm
@@ -1209,11 +1209,11 @@ x86_pop_reg :: Word8 -> CodeGen e s ()
 x86_pop_reg reg = emit8 (0x58 + reg)
 
 x86_pop_mem :: Word32 -> CodeGen e s ()
-x86_pop_mem mem = emit8 0x87 >> x86_mem_emit 0 mem    
+x86_pop_mem mem = emit8 0x87 >> x86_mem_emit 0 mem
 
 x86_pop_membase :: Word8 -> Word32 -> CodeGen e s ()
-x86_pop_membase basereg disp =        
-    emit8 0x87 >> x86_membase_emit 0 basereg disp     
+x86_pop_membase basereg disp =
+    emit8 0x87 >> x86_membase_emit 0 basereg disp
 
 x86_pushad :: CodeGen e s ()
 x86_pushad = emit8 0x60
@@ -1228,29 +1228,29 @@ x86_popfd :: CodeGen e s ()
 x86_popfd  = emit8 0x9d
 
 x86_loop ::  Word8 -> CodeGen e s ()
-x86_loop imm = emit8 0xe2 >> x86_imm_emit8 imm        
+x86_loop imm = emit8 0xe2 >> x86_imm_emit8 imm
 
 x86_loope :: Word8 -> CodeGen e s ()
-x86_loope imm = emit8 0xe1 >> x86_imm_emit8 imm       
+x86_loope imm = emit8 0xe1 >> x86_imm_emit8 imm
 
 x86_loopne :: Word8 -> CodeGen e s ()
-x86_loopne imm = emit8 0xe0 >> x86_imm_emit8 imm      
+x86_loopne imm = emit8 0xe0 >> x86_imm_emit8 imm
 
 x86_jump32 :: Word32 -> CodeGen e s ()
-x86_jump32 imm = emit8 0xe9 >> x86_imm_emit32 imm     
+x86_jump32 imm = emit8 0xe9 >> x86_imm_emit32 imm
 
 x86_jump8 :: Word8 -> CodeGen e s ()
-x86_jump8 imm = emit8 0xeb >> x86_imm_emit8 imm       
+x86_jump8 imm = emit8 0xeb >> x86_imm_emit8 imm
 
 x86_jump_reg :: Word8 -> CodeGen e s ()
-x86_jump_reg reg = emit8 0xff >> x86_reg_emit 4 reg   
+x86_jump_reg reg = emit8 0xff >> x86_reg_emit 4 reg
 
 x86_jump_mem :: Word32 -> CodeGen e s ()
-x86_jump_mem mem = emit8 0xff >> x86_mem_emit 4 mem   
+x86_jump_mem mem = emit8 0xff >> x86_mem_emit 4 mem
 
 x86_jump_membase :: Word8 -> Word32 -> CodeGen e s ()
-x86_jump_membase basereg disp =       
-    emit8 0xff >> x86_membase_emit 4 basereg disp     
+x86_jump_membase basereg disp =
+    emit8 0xff >> x86_membase_emit 4 basereg disp
 
 x86_jump_pointer :: Ptr a -> CodeGen e s ()
 x86_jump_pointer target =
@@ -1264,13 +1264,13 @@ x86_jump_pointer target =
 {-
 x86_jump_code target =
     do inst <- getCodeOffset
-       let t = target - inst - 2      
+       let t = target - inst - 2
        if x86_is_imm8 t
           then x86_jump8 (fromIntegral t)
           else x86_jump32 (fromIntegral (t - 3))
 -}
 {-
-x86_jump_disp disp =  
+x86_jump_disp disp =
     do let t = disp - 2
        if x86_is_imm8 t
           then x86_jump8 (fromIntegral t)
@@ -1278,24 +1278,24 @@ x86_jump_disp disp =
 -}
 
 x86_branch8 :: Int -> Word8 -> Bool -> CodeGen e s ()
-x86_branch8 cond imm is_signed =      
-    do if is_signed   
+x86_branch8 cond imm is_signed =
+    do if is_signed
           then emit8 (x86_cc_signed_map !! cond)
-          else emit8 (x86_cc_unsigned_map !! cond)    
-       x86_imm_emit8 imm      
+          else emit8 (x86_cc_unsigned_map !! cond)
+       x86_imm_emit8 imm
 
 x86_branch32 :: Int -> Word32 -> Bool -> CodeGen e s ()
-x86_branch32 cond imm is_signed =     
-    do emit8 0x0f     
-       if is_signed   
-          then emit8 ((x86_cc_signed_map !! cond) + 0x10)     
-          else emit8 ((x86_cc_unsigned_map !! cond) + 0x10)   
-       x86_imm_emit32 imm     
+x86_branch32 cond imm is_signed =
+    do emit8 0x0f
+       if is_signed
+          then emit8 ((x86_cc_signed_map !! cond) + 0x10)
+          else emit8 ((x86_cc_unsigned_map !! cond) + 0x10)
+       x86_imm_emit32 imm
 
 x86_branch :: Int -> Int -> Bool -> CodeGen e s ()
-x86_branch cond target is_signed =    
+x86_branch cond target is_signed =
     do inst <- getCodeOffset
-       let offset = target - inst - 2;        
+       let offset = target - inst - 2;
        if x86_is_imm8 offset
           then x86_branch8 cond (fromIntegral offset) is_signed
           else x86_branch32 cond (fromIntegral (offset - 4)) is_signed
@@ -1308,7 +1308,7 @@ x86_branch_pointer cond target is_signed =
        x86_branch32 cond (fromIntegral (target `minusPtr` ptr - 5)) is_signed
 
 {-
-x86_branch_disp cond disp is_signed = 
+x86_branch_disp cond disp is_signed =
     do let offset = disp - 2
        if x86_is_imm8 offset
           then x86_branch8 cond (fromIntegral offset) is_signed
@@ -1319,45 +1319,45 @@ x86_jecxz :: Word8 -> CodeGen e s ()
 x86_jecxz imm = emit8 0xe3 >> emit8 imm
 
 x86_set_reg :: Int -> Word8 -> Bool -> CodeGen e s ()
-x86_set_reg cond reg is_signed =      
-    do emit8 0x0f     
+x86_set_reg cond reg is_signed =
+    do emit8 0x0f
        if is_signed
-          then emit8 ((x86_cc_signed_map !! cond) + 0x20)     
-          else emit8 ((x86_cc_unsigned_map !! cond) + 0x20)   
-       x86_reg_emit 0 reg     
+          then emit8 ((x86_cc_signed_map !! cond) + 0x20)
+          else emit8 ((x86_cc_unsigned_map !! cond) + 0x20)
+       x86_reg_emit 0 reg
 
 x86_set_mem :: Int -> Word32 -> Bool -> CodeGen e s ()
-x86_set_mem cond mem is_signed =      
-    do emit8 0x0f     
+x86_set_mem cond mem is_signed =
+    do emit8 0x0f
        if is_signed
-          then emit8 ((x86_cc_signed_map !! cond) + 0x20)     
-          else emit8 ((x86_cc_unsigned_map !! cond) + 0x20)   
-       x86_mem_emit 0 mem     
+          then emit8 ((x86_cc_signed_map !! cond) + 0x20)
+          else emit8 ((x86_cc_unsigned_map !! cond) + 0x20)
+       x86_mem_emit 0 mem
 x86_set_membase :: Int -> Word8 -> Word32 -> Bool -> CodeGen e s ()
-x86_set_membase cond basereg disp is_signed = 
-    do emit8 0x0f     
+x86_set_membase cond basereg disp is_signed =
+    do emit8 0x0f
        if is_signed
-          then emit8 ((x86_cc_signed_map !! cond) + 0x20)     
-          else emit8 ((x86_cc_unsigned_map !! cond) + 0x20)   
-       x86_membase_emit 0 basereg disp        
+          then emit8 ((x86_cc_signed_map !! cond) + 0x20)
+          else emit8 ((x86_cc_unsigned_map !! cond) + 0x20)
+       x86_membase_emit 0 basereg disp
 
 -- Call instructions.
 
 x86_call_imm :: Word32 -> CodeGen s e ()
-x86_call_imm disp = emit8 0xe8 >> x86_imm_emit32 disp 
+x86_call_imm disp = emit8 0xe8 >> x86_imm_emit32 disp
 
 x86_call_reg :: Word8 -> CodeGen s e ()
 x86_call_reg reg = emit8 0xff >> x86_reg_emit 2 reg
 
 x86_call_mem :: Word32 -> CodeGen s e ()
-x86_call_mem mem = emit8 0xff >> x86_mem_emit 2 mem   
+x86_call_mem mem = emit8 0xff >> x86_mem_emit 2 mem
 
 x86_call_membase :: Word8 -> Word32 -> CodeGen s e ()
-x86_call_membase basereg disp =       
-    emit8 0xff >> x86_membase_emit 2 basereg disp     
+x86_call_membase basereg disp =
+    emit8 0xff >> x86_membase_emit 2 basereg disp
 
 x86_call_code :: Int -> CodeGen s e ()
-x86_call_code target =        
+x86_call_code target =
     do inst <- getCodeOffset
        let  _x86_offset = (target - inst - 5)
        x86_call_imm (fromIntegral _x86_offset)
@@ -1376,28 +1376,28 @@ x86_ret :: CodeGen s e ()
 x86_ret = emit8 0xc3
 
 x86_ret_imm :: Word16 -> CodeGen s e ()
-x86_ret_imm imm =     
-    if imm == 0 then x86_ret else emit8 0xc2 >> x86_imm_emit16 imm    
+x86_ret_imm imm =
+    if imm == 0 then x86_ret else emit8 0xc2 >> x86_imm_emit16 imm
 
 -- Conditional move instructions.
 x86_cmov ::Int -> Bool -> CodeGen e s ()
 x86_cmov cond is_signed =
-    do emit8 0x0f     
+    do emit8 0x0f
        if is_signed
           then emit8 ((x86_cc_signed_map !! cond) - 0x30)
           else emit8 ((x86_cc_unsigned_map !! cond) - 0x30)
 x86_cmov_reg :: Int -> Bool -> Word8 -> Word8 -> CodeGen e s ()
-x86_cmov_reg cond is_signed dreg reg =        
+x86_cmov_reg cond is_signed dreg reg =
     do x86_cmov cond is_signed
-       x86_reg_emit dreg reg  
+       x86_reg_emit dreg reg
 x86_cmov_mem :: Int -> Bool -> Word8 -> Word32 -> CodeGen e s ()
-x86_cmov_mem cond is_signed reg mem = 
+x86_cmov_mem cond is_signed reg mem =
     do x86_cmov cond is_signed
-       x86_mem_emit reg mem   
+       x86_mem_emit reg mem
 x86_cmov_membase :: Int -> Bool -> Word8 -> Word8 -> Word32 -> CodeGen e s ()
-x86_cmov_membase cond is_signed reg basereg disp =    
+x86_cmov_membase cond is_signed reg basereg disp =
     do x86_cmov cond is_signed
-       x86_membase_emit reg basereg disp      
+       x86_membase_emit reg basereg disp
 
 -- Note: definition for ENTER instruction is not complete.  The counter
 -- for the display setup is set to 0.
@@ -1413,7 +1413,7 @@ x86_sahf  = emit8 0x9e
 
 -- Trigonometric floating point functions
 
-x86_fsin, x86_fcos, x86_fabs, x86_ftst, x86_fxam, x86_fpatan, 
+x86_fsin, x86_fcos, x86_fabs, x86_ftst, x86_fxam, x86_fpatan,
  x86_fprem, x86_fprem1, x86_frndint, x86_fsqrt, x86_fptan :: CodeGen s e ()
 x86_fsin    = emit8 0xd9 >> emit8 0xfe
 x86_fcos    = emit8 0xd9 >> emit8 0xff
@@ -1430,20 +1430,20 @@ x86_fptan   = emit8 0xd9 >> emit8 0xf2
 -- Fast instruction sequences for 1 to 7-byte noops.
 
 x86_padding :: (Eq t, Num t) => t -> CodeGen e s ()
-x86_padding size =    
+x86_padding size =
     case size of
       1 -> x86_nop
       2 -> emit8 0x8b >> emit8  0xc0
       3 -> emit8 0x8d >> emit8 0x6d >> emit8 0x00
-      4 -> emit8 0x8d >> emit8 0x64 >> emit8 0x24 >> emit8 0x00       
+      4 -> emit8 0x8d >> emit8 0x64 >> emit8 0x24 >> emit8 0x00
       5 -> emit8 0x8d >> emit8 0x64 >> emit8 0x24 >> emit8 0x00 >>
-           x86_nop  
-      6 -> emit8 0x8d >> emit8 0xad >>        
-           emit8 0x00 >> emit8 0x00 >>        
+           x86_nop
+      6 -> emit8 0x8d >> emit8 0xad >>
+           emit8 0x00 >> emit8 0x00 >>
            emit8 0x00 >> emit8 0x00
-      7 -> emit8 0x8d >> emit8 0xa4 >>        
-           emit8 0x24 >> emit8 0x00 >>        
-           emit8 0x00 >> emit8 0x00 >>        
+      7 -> emit8 0x8d >> emit8 0xa4 >>
+           emit8 0x24 >> emit8 0x00 >>
+           emit8 0x00 >> emit8 0x00 >>
            emit8 0x00
       _ -> failCodeGen (PP.text "invalid padding size")
 
@@ -1452,11 +1452,11 @@ x86_padding size =
 -- specifies which registers to save on function entry.
 
 x86_prolog :: Int -> Int -> CodeGen e s ()
-x86_prolog frame_size reg_mask =      
+x86_prolog frame_size reg_mask =
     do x86_push_reg x86_ebp
        x86_mov_reg_reg x86_ebp x86_esp x86_dword_size
        gen_push 0 1
-       if frame_size /= 0 
+       if frame_size /= 0
           then x86_alu_reg_imm x86_sub x86_esp frame_size
           else return ()
   where
@@ -2143,7 +2143,7 @@ x86_prefetch_mem :: Word8 -> Word32 -> CodeGen e s ()
 x86_prefetch_mem hint disp =
     do emit8 0x0f
        emit8 0x18
-       x86_address_byte 0 hint 0 
+       x86_address_byte 0 hint 0
        x86_imm_emit32 disp
 
 x86_prefetch0_membase :: Word8 -> Word32 -> CodeGen e s ()

@@ -30,7 +30,7 @@ repl env verbose =
                        interpret env verbose s'
 
 interpret :: Ptr Int32 -> Bool -> String -> IO ()
-interpret env verbose s = 
+interpret env verbose s =
     do let e = parse statement "<standard input>" s
        case e of
          Left err -> do putStrLn (show err)
@@ -38,7 +38,7 @@ interpret env verbose s =
          Right stmt -> run env verbose stmt
 
 run :: Ptr Int32 -> Bool -> Stmt -> IO ()
-run env verbose (Cmd Help) = 
+run env verbose (Cmd Help) =
     do putStrLn "Enter an arithmetic expression to evaluate it"
        putStrLn "  e.g. 5 / 2"
        putStrLn "Enter an assignment to set a variable"
@@ -69,7 +69,7 @@ eval' env e = do (_, Right v) <- runCodeGen (compileAndRun e) env ()
                  return v
 
 compileAndRun :: Stmt -> CodeGen (Ptr Int32) s (Int32, [Instruction])
-compileAndRun (Assign c exp) = 
+compileAndRun (Assign c exp) =
     do entryCode
        compileExp exp
        env <- getEnv
@@ -100,7 +100,7 @@ compileBinOp e1 e2 op = do compileExp e2
                            push eax
                            compileExp e1
                            op
-                           add esp (4 :: Word32) 
+                           add esp (4 :: Word32)
 
 entryCode :: CodeGen e s ()
 entryCode = do push ebp
