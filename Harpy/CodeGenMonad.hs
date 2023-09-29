@@ -76,6 +76,7 @@ module Harpy.CodeGenMonad(
           disassemble
     ) where
 
+import Prelude hiding ((<>))
 import qualified Harpy.X86Disassembler as Dis
 
 import Control.Applicative
@@ -186,8 +187,10 @@ instance Applicative (CodeGen e s) where
 
 instance Monad (CodeGen e s) where
     return x = cgReturn x
-    fail err = cgFail err
     m >>= k = cgBind m k
+
+instance MonadFail (CodeGen e s) where
+    fail err = cgFail err
 
 cgReturn :: a -> CodeGen e s a
 cgReturn x = CodeGen (\_env state -> return (state, Right x))
