@@ -1,7 +1,7 @@
 Cabal-version:  >=1.6
 Build-type: Simple
 Name:           harpy
-Version:        0.6.0.3
+Version:        0.6.0.4
 License:        BSD3
 License-file:   LICENSE
 Author:         Dirk Kleeblatt <dirk.kleeblatt@gmx.de>
