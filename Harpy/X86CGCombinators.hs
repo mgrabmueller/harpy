@@ -3,7 +3,7 @@
 -- Module      :  X86CodeGen
 -- Copyright   :  (c) 2006-2015 Martin Grabmueller and Dirk Kleeblatt
 -- License     :  BSD3
--- 
+--
 -- Maintainer  :  martin@grabmueller.de
 -- Stability   :  quite experimental
 -- Portability :  portable (but generated code non-portable)
@@ -24,7 +24,7 @@ module Harpy.X86CGCombinators(
   CtrlDest(..),
   DataDest(..),
   -- * Combinators
-  ifThenElse, 
+  ifThenElse,
   doWhile,
   continue,
   continueBranch,
@@ -60,7 +60,7 @@ data CtrlDest = FallThrough              -- ^ Go to next instruction
 -- | User state is used to maintain bitmask of registers currently in use.
 data UserState = UserState {}
 
-                             
+
 -- | User environment stores code generators for accessing specific
 -- variables as well as the current data and control destinations
 data UserEnv = UserEnv { bindings :: [(String, CodeGen UserEnv UserState ())],
@@ -79,11 +79,11 @@ ifThenElse :: CodeGen UserEnv s r
 	      -> CodeGen UserEnv s a1
 	      -> CodeGen UserEnv s ()
 ifThenElse condCg thenCg elseCg =
-    do env <- getEnv 
+    do env <- getEnv
        elseLabel <- newLabel
        endLabel <- newLabel
        withDest Ignore (Branch FallThrough (Goto elseLabel)) condCg
-       withCtrlDest (case ctrlDest env of 
+       withCtrlDest (case ctrlDest env of
                        FallThrough -> Goto endLabel
                        _ -> ctrlDest env)
                     (thenCg >> continue)
@@ -96,8 +96,8 @@ doWhile condCg bodyCg =
        testLabel <- newLabel
        jmp testLabel
        topLabel @@ withCtrlDest FallThrough (bodyCg >> continue)
-       testLabel @@ withDest Ignore (Branch (Goto topLabel) FallThrough) 
-                        condCg 
+       testLabel @@ withDest Ignore (Branch (Goto topLabel) FallThrough)
+                        condCg
        continue
 
 doFor :: (Mov a Word32, Add a Word32, Cmp a Word32) => a -> Word32 -> Word32 -> Int32 ->
@@ -115,7 +115,7 @@ doFor loc from to step body =
           then jge topLabel
           else jle topLabel
        continue
-       
+
 
 continue :: CodeGen UserEnv s ()
 continue =
@@ -159,40 +159,40 @@ reg sreg =
     do env <- getEnv
        reg' sreg (dataDest env)
   where
-  reg' sreg (RegDest r) = 
-    do if sreg /= r 
+  reg' sreg (RegDest r) =
+    do if sreg /= r
           then mov r sreg
           else return ()
-  reg' sreg (StackDest) = 
+  reg' sreg (StackDest) =
     do push sreg
-  reg' sreg (MemBaseDest r offset) = 
+  reg' sreg (MemBaseDest r offset) =
     do mov (Disp offset, r) sreg
-  reg' sreg Ignore = return () 
+  reg' sreg Ignore = return ()
 
 membase reg ofs =
     do env <- getEnv
        membase' reg ofs (dataDest env)
   where
-  membase' reg ofs (RegDest r) = 
+  membase' reg ofs (RegDest r) =
     do mov r (Disp ofs, reg)
-  membase' reg ofs (StackDest) = 
+  membase' reg ofs (StackDest) =
     do push (Disp ofs, reg)
-  membase' reg ofs (MemBaseDest r offset) = 
+  membase' reg ofs (MemBaseDest r offset) =
     do push edi
        mov edi (Disp ofs, reg)
        mov (Disp offset, r) edi
        pop edi
-  membase' reg ofs Ignore = return () 
+  membase' reg ofs Ignore = return ()
 
 global ofs =
     do env <- getEnv
        global' ofs (dataDest env)
   where
-  global' ofs (RegDest r) = 
+  global' ofs (RegDest r) =
     do mov r (Addr ofs)
-  global' ofs (StackDest) = 
+  global' ofs (StackDest) =
     do push (Addr ofs)
-  global' ofs (MemBaseDest r offset) = 
+  global' ofs (MemBaseDest r offset) =
     do push edi
        mov edi (Addr ofs)
        mov (Disp offset, r) edi
@@ -203,13 +203,13 @@ immediate value =
     do env <- getEnv
        immediate' value (dataDest env)
   where
-  immediate' value (RegDest r) = 
+  immediate' value (RegDest r) =
     do mov r value
-  immediate' value (StackDest) = 
+  immediate' value (StackDest) =
     do x86_push_imm value
-  immediate' value (MemBaseDest r offset) = 
+  immediate' value (MemBaseDest r offset) =
     do push edi
-       mov edi value 
+       mov edi value
        mov (Disp offset, r) edi
        pop edi
   immediate' ofs Ignore = return ()

@@ -4,7 +4,7 @@
 -- Module      :  Harpy.X86Assembler
 -- Copyright   :  (c) 2006-2015 Martin Grabmueller and Dirk Kleeblatt
 -- License     :  BSD3
--- 
+--
 -- Maintainer  :  martin@grabmueller.de
 -- Stability   :  provisional
 -- Portability :  non-portable
@@ -738,28 +738,28 @@ class Test a b where
   test :: a -> b -> CodeGen e s ()
 
 instance Test Reg32 Word32 where
-  test (Reg32 dest) imm = ensureBufferSize x86_max_instruction_bytes >> x86_test_reg_imm dest imm 
+  test (Reg32 dest) imm = ensureBufferSize x86_max_instruction_bytes >> x86_test_reg_imm dest imm
 
 instance Test Addr Word32 where
-  test (Addr dest) imm = ensureBufferSize x86_max_instruction_bytes >> x86_test_mem_imm dest imm 
+  test (Addr dest) imm = ensureBufferSize x86_max_instruction_bytes >> x86_test_mem_imm dest imm
 
 instance Test (Disp, Reg32) Word32 where
-  test (Disp disp, Reg32 dest) imm = ensureBufferSize x86_max_instruction_bytes >> x86_test_membase_imm dest disp imm 
+  test (Disp disp, Reg32 dest) imm = ensureBufferSize x86_max_instruction_bytes >> x86_test_membase_imm dest disp imm
 
 instance Test Ind Word32 where
-  test (Ind (Reg32 dest)) imm = ensureBufferSize x86_max_instruction_bytes >> x86_test_membase_imm dest 0 imm 
+  test (Ind (Reg32 dest)) imm = ensureBufferSize x86_max_instruction_bytes >> x86_test_membase_imm dest 0 imm
 
 instance Test Reg32 Reg32 where
-  test (Reg32 dest) (Reg32 source) = ensureBufferSize x86_max_instruction_bytes >> x86_test_reg_reg dest source 
+  test (Reg32 dest) (Reg32 source) = ensureBufferSize x86_max_instruction_bytes >> x86_test_reg_reg dest source
 
 instance Test Addr Reg32 where
-  test (Addr dest) (Reg32 source) = ensureBufferSize x86_max_instruction_bytes >> x86_test_mem_reg dest source 
+  test (Addr dest) (Reg32 source) = ensureBufferSize x86_max_instruction_bytes >> x86_test_mem_reg dest source
 
 instance Test (Disp, Reg32) Reg32 where
-  test (Disp disp, Reg32 dest) (Reg32 source) = ensureBufferSize x86_max_instruction_bytes >> x86_test_membase_reg dest disp source 
+  test (Disp disp, Reg32 dest) (Reg32 source) = ensureBufferSize x86_max_instruction_bytes >> x86_test_membase_reg dest disp source
 
 instance Test Ind Reg32 where
-  test (Ind (Reg32 dest)) (Reg32 source) = ensureBufferSize x86_max_instruction_bytes >> x86_test_membase_reg dest 0 source 
+  test (Ind (Reg32 dest)) (Reg32 source) = ensureBufferSize x86_max_instruction_bytes >> x86_test_membase_reg dest 0 source
 
 
 -- shift and rotate
@@ -768,16 +768,16 @@ class Rol a b where
   rol :: a -> b -> CodeGen e s ()
 
 instance Rol Reg32 Word8 where
-  rol (Reg32 dest) imm = ensureBufferSize x86_max_instruction_bytes >> x86_shift_reg_imm x86_rol dest imm 
+  rol (Reg32 dest) imm = ensureBufferSize x86_max_instruction_bytes >> x86_shift_reg_imm x86_rol dest imm
 
 instance Rol Addr Word8 where
-  rol (Addr dest) imm = ensureBufferSize x86_max_instruction_bytes >> x86_shift_mem_imm x86_rol dest imm 
+  rol (Addr dest) imm = ensureBufferSize x86_max_instruction_bytes >> x86_shift_mem_imm x86_rol dest imm
 
 instance Rol (Disp, Reg32) Word8 where
-  rol (Disp disp, Reg32 dest) imm = ensureBufferSize x86_max_instruction_bytes >> x86_shift_membase_imm x86_rol dest disp imm 
+  rol (Disp disp, Reg32 dest) imm = ensureBufferSize x86_max_instruction_bytes >> x86_shift_membase_imm x86_rol dest disp imm
 
 instance Rol Ind Word8 where
-  rol (Ind (Reg32 dest)) imm = ensureBufferSize x86_max_instruction_bytes >> x86_shift_membase_imm x86_rol dest 0 imm 
+  rol (Ind (Reg32 dest)) imm = ensureBufferSize x86_max_instruction_bytes >> x86_shift_membase_imm x86_rol dest 0 imm
 
 instance Rol Reg32 Reg8 where
   rol (Reg32 dest) (Reg8 1) = ensureBufferSize x86_max_instruction_bytes >> x86_shift_reg x86_rol dest
@@ -798,16 +798,16 @@ class Ror a b where
   ror :: a -> b -> CodeGen e s ()
 
 instance Ror Reg32 Word8 where
-  ror (Reg32 dest) imm = ensureBufferSize x86_max_instruction_bytes >> x86_shift_reg_imm x86_ror dest imm 
+  ror (Reg32 dest) imm = ensureBufferSize x86_max_instruction_bytes >> x86_shift_reg_imm x86_ror dest imm
 
 instance Ror Addr Word8 where
-  ror (Addr dest) imm = ensureBufferSize x86_max_instruction_bytes >> x86_shift_mem_imm x86_ror dest imm 
+  ror (Addr dest) imm = ensureBufferSize x86_max_instruction_bytes >> x86_shift_mem_imm x86_ror dest imm
 
 instance Ror (Disp, Reg32) Word8 where
-  ror (Disp disp, Reg32 dest) imm = ensureBufferSize x86_max_instruction_bytes >> x86_shift_membase_imm x86_ror dest disp imm 
+  ror (Disp disp, Reg32 dest) imm = ensureBufferSize x86_max_instruction_bytes >> x86_shift_membase_imm x86_ror dest disp imm
 
 instance Ror Ind Word8 where
-  ror (Ind (Reg32 dest)) imm = ensureBufferSize x86_max_instruction_bytes >> x86_shift_membase_imm x86_ror dest 0 imm 
+  ror (Ind (Reg32 dest)) imm = ensureBufferSize x86_max_instruction_bytes >> x86_shift_membase_imm x86_ror dest 0 imm
 
 instance Ror Reg32 Reg8 where
   ror (Reg32 dest) (Reg8 1) = ensureBufferSize x86_max_instruction_bytes >> x86_shift_reg x86_ror dest
@@ -828,16 +828,16 @@ class Rcl a b where
   rcl :: a -> b -> CodeGen e s ()
 
 instance Rcl Reg32 Word8 where
-  rcl (Reg32 dest) imm = ensureBufferSize x86_max_instruction_bytes >> x86_shift_reg_imm x86_rcl dest imm 
+  rcl (Reg32 dest) imm = ensureBufferSize x86_max_instruction_bytes >> x86_shift_reg_imm x86_rcl dest imm
 
 instance Rcl Addr Word8 where
-  rcl (Addr dest) imm = ensureBufferSize x86_max_instruction_bytes >> x86_shift_mem_imm x86_rcl dest imm 
+  rcl (Addr dest) imm = ensureBufferSize x86_max_instruction_bytes >> x86_shift_mem_imm x86_rcl dest imm
 
 instance Rcl (Disp, Reg32) Word8 where
-  rcl (Disp disp, Reg32 dest) imm = ensureBufferSize x86_max_instruction_bytes >> x86_shift_membase_imm x86_rcl dest disp imm 
+  rcl (Disp disp, Reg32 dest) imm = ensureBufferSize x86_max_instruction_bytes >> x86_shift_membase_imm x86_rcl dest disp imm
 
 instance Rcl Ind Word8 where
-  rcl (Ind (Reg32 dest)) imm = ensureBufferSize x86_max_instruction_bytes >> x86_shift_membase_imm x86_rcl dest 0 imm 
+  rcl (Ind (Reg32 dest)) imm = ensureBufferSize x86_max_instruction_bytes >> x86_shift_membase_imm x86_rcl dest 0 imm
 
 instance Rcl Reg32 Reg8 where
   rcl (Reg32 dest) (Reg8 1) = ensureBufferSize x86_max_instruction_bytes >> x86_shift_reg x86_rcl dest
@@ -858,16 +858,16 @@ class Rcr a b where
   rcr :: a -> b -> CodeGen e s ()
 
 instance Rcr Reg32 Word8 where
-  rcr (Reg32 dest) imm = ensureBufferSize x86_max_instruction_bytes >> x86_shift_reg_imm x86_rcr dest imm 
+  rcr (Reg32 dest) imm = ensureBufferSize x86_max_instruction_bytes >> x86_shift_reg_imm x86_rcr dest imm
 
 instance Rcr Addr Word8 where
-  rcr (Addr dest) imm = ensureBufferSize x86_max_instruction_bytes >> x86_shift_mem_imm x86_rcr dest imm 
+  rcr (Addr dest) imm = ensureBufferSize x86_max_instruction_bytes >> x86_shift_mem_imm x86_rcr dest imm
 
 instance Rcr (Disp, Reg32) Word8 where
-  rcr (Disp disp, Reg32 dest) imm = ensureBufferSize x86_max_instruction_bytes >> x86_shift_membase_imm x86_rcr dest disp imm 
+  rcr (Disp disp, Reg32 dest) imm = ensureBufferSize x86_max_instruction_bytes >> x86_shift_membase_imm x86_rcr dest disp imm
 
 instance Rcr Ind Word8 where
-  rcr (Ind (Reg32 dest)) imm = ensureBufferSize x86_max_instruction_bytes >> x86_shift_membase_imm x86_rcr dest 0 imm 
+  rcr (Ind (Reg32 dest)) imm = ensureBufferSize x86_max_instruction_bytes >> x86_shift_membase_imm x86_rcr dest 0 imm
 
 instance Rcr Reg32 Reg8 where
   rcr (Reg32 dest) (Reg8 1) = ensureBufferSize x86_max_instruction_bytes >> x86_shift_reg x86_rcr dest
@@ -888,16 +888,16 @@ class Shl a b where
   shl :: a -> b -> CodeGen e s ()
 
 instance Shl Reg32 Word8 where
-  shl (Reg32 dest) imm = ensureBufferSize x86_max_instruction_bytes >> x86_shift_reg_imm x86_shl dest imm 
+  shl (Reg32 dest) imm = ensureBufferSize x86_max_instruction_bytes >> x86_shift_reg_imm x86_shl dest imm
 
 instance Shl Addr Word8 where
-  shl (Addr dest) imm = ensureBufferSize x86_max_instruction_bytes >> x86_shift_mem_imm x86_shl dest imm 
+  shl (Addr dest) imm = ensureBufferSize x86_max_instruction_bytes >> x86_shift_mem_imm x86_shl dest imm
 
 instance Shl (Disp, Reg32) Word8 where
-  shl (Disp disp, Reg32 dest) imm = ensureBufferSize x86_max_instruction_bytes >> x86_shift_membase_imm x86_shl dest disp imm 
+  shl (Disp disp, Reg32 dest) imm = ensureBufferSize x86_max_instruction_bytes >> x86_shift_membase_imm x86_shl dest disp imm
 
 instance Shl Ind Word8 where
-  shl (Ind (Reg32 dest)) imm = ensureBufferSize x86_max_instruction_bytes >> x86_shift_membase_imm x86_shl dest 0 imm 
+  shl (Ind (Reg32 dest)) imm = ensureBufferSize x86_max_instruction_bytes >> x86_shift_membase_imm x86_shl dest 0 imm
 
 instance Shl Reg32 Reg8 where
   shl (Reg32 dest) (Reg8 1) = ensureBufferSize x86_max_instruction_bytes >> x86_shift_reg x86_shl dest
@@ -918,16 +918,16 @@ class Shr a b where
   shr :: a -> b -> CodeGen e s ()
 
 instance Shr Reg32 Word8 where
-  shr (Reg32 dest) imm = ensureBufferSize x86_max_instruction_bytes >> x86_shift_reg_imm x86_shr dest imm 
+  shr (Reg32 dest) imm = ensureBufferSize x86_max_instruction_bytes >> x86_shift_reg_imm x86_shr dest imm
 
 instance Shr Addr Word8 where
-  shr (Addr dest) imm = ensureBufferSize x86_max_instruction_bytes >> x86_shift_mem_imm x86_shr dest imm 
+  shr (Addr dest) imm = ensureBufferSize x86_max_instruction_bytes >> x86_shift_mem_imm x86_shr dest imm
 
 instance Shr (Disp, Reg32) Word8 where
-  shr (Disp disp, Reg32 dest) imm = ensureBufferSize x86_max_instruction_bytes >> x86_shift_membase_imm x86_shr dest disp imm 
+  shr (Disp disp, Reg32 dest) imm = ensureBufferSize x86_max_instruction_bytes >> x86_shift_membase_imm x86_shr dest disp imm
 
 instance Shr Ind Word8 where
-  shr (Ind (Reg32 dest)) imm = ensureBufferSize x86_max_instruction_bytes >> x86_shift_membase_imm x86_shr dest 0 imm 
+  shr (Ind (Reg32 dest)) imm = ensureBufferSize x86_max_instruction_bytes >> x86_shift_membase_imm x86_shr dest 0 imm
 
 instance Shr Reg32 Reg8 where
   shr (Reg32 dest) (Reg8 1) = ensureBufferSize x86_max_instruction_bytes >> x86_shift_reg x86_shr dest
@@ -948,16 +948,16 @@ class Sar a b where
   sar :: a -> b -> CodeGen e s ()
 
 instance Sar Reg32 Word8 where
-  sar (Reg32 dest) imm = ensureBufferSize x86_max_instruction_bytes >> x86_shift_reg_imm x86_sar dest imm 
+  sar (Reg32 dest) imm = ensureBufferSize x86_max_instruction_bytes >> x86_shift_reg_imm x86_sar dest imm
 
 instance Sar Addr Word8 where
-  sar (Addr dest) imm = ensureBufferSize x86_max_instruction_bytes >> x86_shift_mem_imm x86_sar dest imm 
+  sar (Addr dest) imm = ensureBufferSize x86_max_instruction_bytes >> x86_shift_mem_imm x86_sar dest imm
 
 instance Sar (Disp, Reg32) Word8 where
-  sar (Disp disp, Reg32 dest) imm = ensureBufferSize x86_max_instruction_bytes >> x86_shift_membase_imm x86_sar dest disp imm 
+  sar (Disp disp, Reg32 dest) imm = ensureBufferSize x86_max_instruction_bytes >> x86_shift_membase_imm x86_sar dest disp imm
 
 instance Sar Ind Word8 where
-  sar (Ind (Reg32 dest)) imm = ensureBufferSize x86_max_instruction_bytes >> x86_shift_membase_imm x86_sar dest 0 imm 
+  sar (Ind (Reg32 dest)) imm = ensureBufferSize x86_max_instruction_bytes >> x86_shift_membase_imm x86_sar dest 0 imm
 
 instance Sar Reg32 Reg8 where
   sar (Reg32 dest) (Reg8 1) = ensureBufferSize x86_max_instruction_bytes >> x86_shift_reg x86_sar dest
@@ -978,16 +978,16 @@ class Sal a b where
   sal :: a -> b -> CodeGen e s ()
 
 instance Sal Reg32 Word8 where
-  sal (Reg32 dest) imm = ensureBufferSize x86_max_instruction_bytes >> x86_shift_reg_imm x86_shl dest imm 
+  sal (Reg32 dest) imm = ensureBufferSize x86_max_instruction_bytes >> x86_shift_reg_imm x86_shl dest imm
 
 instance Sal Addr Word8 where
-  sal (Addr dest) imm = ensureBufferSize x86_max_instruction_bytes >> x86_shift_mem_imm x86_shl dest imm 
+  sal (Addr dest) imm = ensureBufferSize x86_max_instruction_bytes >> x86_shift_mem_imm x86_shl dest imm
 
 instance Sal (Disp, Reg32) Word8 where
-  sal (Disp disp, Reg32 dest) imm = ensureBufferSize x86_max_instruction_bytes >> x86_shift_membase_imm x86_shl dest disp imm 
+  sal (Disp disp, Reg32 dest) imm = ensureBufferSize x86_max_instruction_bytes >> x86_shift_membase_imm x86_shl dest disp imm
 
 instance Sal Ind Word8 where
-  sal (Ind (Reg32 dest)) imm = ensureBufferSize x86_max_instruction_bytes >> x86_shift_membase_imm x86_shl dest 0 imm 
+  sal (Ind (Reg32 dest)) imm = ensureBufferSize x86_max_instruction_bytes >> x86_shift_membase_imm x86_shl dest 0 imm
 
 instance Sal Reg32 Reg8 where
   sal (Reg32 dest) (Reg8 1) = ensureBufferSize x86_max_instruction_bytes >> x86_shift_reg x86_shl dest
@@ -1015,7 +1015,7 @@ instance Shrd Reg32 Reg32 Reg8 where
   shrd _ _ _ = onlyCl
 
 instance Shrd Reg32 Reg32 Word8 where
-  shrd (Reg32 dest) (Reg32 source) imm = ensureBufferSize x86_max_instruction_bytes >> x86_shrd_reg_imm dest source imm 
+  shrd (Reg32 dest) (Reg32 source) imm = ensureBufferSize x86_max_instruction_bytes >> x86_shrd_reg_imm dest source imm
 
 
 -- double precision shift left
@@ -1028,7 +1028,7 @@ instance Shld Reg32 Reg32 Reg8 where
   shld _ _ _ = onlyCl
 
 instance Shld Reg32 Reg32 Word8 where
-  shld (Reg32 dest) (Reg32 source) imm = ensureBufferSize x86_max_instruction_bytes >> x86_shld_reg_imm dest source imm 
+  shld (Reg32 dest) (Reg32 source) imm = ensureBufferSize x86_max_instruction_bytes >> x86_shld_reg_imm dest source imm
 
 
 -- unsigned multiply
@@ -1074,16 +1074,16 @@ instance Imul InPlace Reg32 Ind where
   imul _ (Reg32 dest) (Ind (Reg32 source)) = ensureBufferSize x86_max_instruction_bytes >> x86_imul_reg_membase dest source 0
 
 instance Imul Reg32 Reg32 Word32 where
-  imul (Reg32 dest) (Reg32 source) imm = ensureBufferSize x86_max_instruction_bytes >> x86_imul_reg_reg_imm dest source imm 
+  imul (Reg32 dest) (Reg32 source) imm = ensureBufferSize x86_max_instruction_bytes >> x86_imul_reg_reg_imm dest source imm
 
 instance Imul Reg32 Addr Word32 where
-  imul (Reg32 dest) (Addr source) imm = ensureBufferSize x86_max_instruction_bytes >> x86_imul_reg_mem_imm dest source imm 
+  imul (Reg32 dest) (Addr source) imm = ensureBufferSize x86_max_instruction_bytes >> x86_imul_reg_mem_imm dest source imm
 
 instance Imul Reg32 (Disp, Reg32) Word32 where
-  imul (Reg32 dest) (Disp disp, Reg32 source) imm = ensureBufferSize x86_max_instruction_bytes >> x86_imul_reg_membase_imm dest source disp imm 
+  imul (Reg32 dest) (Disp disp, Reg32 source) imm = ensureBufferSize x86_max_instruction_bytes >> x86_imul_reg_membase_imm dest source disp imm
 
 instance Imul Reg32 Ind Word32 where
-  imul (Reg32 dest) (Ind (Reg32 source)) imm = ensureBufferSize x86_max_instruction_bytes >> x86_imul_reg_membase_imm dest source 0 imm 
+  imul (Reg32 dest) (Ind (Reg32 source)) imm = ensureBufferSize x86_max_instruction_bytes >> x86_imul_reg_membase_imm dest source 0 imm
 
 
 -- divide EDX:EAX by rm;
@@ -1484,13 +1484,13 @@ class Lea a b where
   lea :: a -> b -> CodeGen e s ()
 
 instance Lea Reg32 Addr where
-  lea (Reg32 dest) (Addr source) = ensureBufferSize x86_max_instruction_bytes >> x86_lea_mem dest source 
+  lea (Reg32 dest) (Addr source) = ensureBufferSize x86_max_instruction_bytes >> x86_lea_mem dest source
 
 instance Lea Reg32 (Disp, Reg32) where
-  lea (Reg32 dest) (Disp disp, Reg32 source) = ensureBufferSize x86_max_instruction_bytes >> x86_lea_membase dest source disp 
+  lea (Reg32 dest) (Disp disp, Reg32 source) = ensureBufferSize x86_max_instruction_bytes >> x86_lea_membase dest source disp
 
 instance Lea Reg32 Ind where
-  lea (Reg32 dest) (Ind (Reg32 source)) = ensureBufferSize x86_max_instruction_bytes >> x86_lea_membase dest source 0 
+  lea (Reg32 dest) (Ind (Reg32 source)) = ensureBufferSize x86_max_instruction_bytes >> x86_lea_membase dest source 0
 
 instance Lea Reg32 (Disp, Reg32, Reg32, Scale) where
   lea (Reg32 dest) (Disp disp, Reg32 5, Reg32 index, s) = ensureBufferSize x86_max_instruction_bytes >> x86_lea_memindex dest 5 disp index (scaleToShift s)
@@ -1519,19 +1519,19 @@ class Push a where
   push :: a -> CodeGen e s ()
 
 instance Push Reg32 where
-  push (Reg32 source) = ensureBufferSize x86_max_instruction_bytes >> x86_push_reg source 
+  push (Reg32 source) = ensureBufferSize x86_max_instruction_bytes >> x86_push_reg source
 
 instance Push Ind where
   push (Ind (Reg32 source)) = ensureBufferSize x86_max_instruction_bytes >> x86_push_regp source
 
 instance Push Addr where
-  push (Addr source) = ensureBufferSize x86_max_instruction_bytes >> x86_push_mem source 
+  push (Addr source) = ensureBufferSize x86_max_instruction_bytes >> x86_push_mem source
 
 instance Push (Disp, Reg32) where
-  push (Disp disp, Reg32 source) = ensureBufferSize x86_max_instruction_bytes >> x86_push_membase source disp 
+  push (Disp disp, Reg32 source) = ensureBufferSize x86_max_instruction_bytes >> x86_push_membase source disp
 
 instance Push Word32 where
-  push imm = ensureBufferSize x86_max_instruction_bytes >> x86_push_imm imm 
+  push imm = ensureBufferSize x86_max_instruction_bytes >> x86_push_imm imm
 
 instance Push Label where
   push l = do ensureBufferSize x86_max_instruction_bytes >> x86_push_imm_template
@@ -1554,16 +1554,16 @@ class Pop a where
   pop :: a -> CodeGen e s ()
 
 instance Pop Reg32 where
-  pop (Reg32 dest) = ensureBufferSize x86_max_instruction_bytes >> x86_pop_reg dest 
+  pop (Reg32 dest) = ensureBufferSize x86_max_instruction_bytes >> x86_pop_reg dest
 
 instance Pop Addr where
-  pop (Addr dest) = ensureBufferSize x86_max_instruction_bytes >> x86_pop_mem dest 
+  pop (Addr dest) = ensureBufferSize x86_max_instruction_bytes >> x86_pop_mem dest
 
 instance Pop (Disp, Reg32) where
-  pop (Disp disp, Reg32 dest) = ensureBufferSize x86_max_instruction_bytes >> x86_pop_membase dest disp 
+  pop (Disp disp, Reg32 dest) = ensureBufferSize x86_max_instruction_bytes >> x86_pop_membase dest disp
 
 instance Pop Ind where
-  pop (Ind (Reg32 dest)) = ensureBufferSize x86_max_instruction_bytes >> x86_pop_membase dest 0 
+  pop (Ind (Reg32 dest)) = ensureBufferSize x86_max_instruction_bytes >> x86_pop_membase dest 0
 
 
 -- push/pop general purpose registers
@@ -1604,29 +1604,29 @@ class Jmp a where
   jmp :: a -> CodeGen e s ()
 
 instance Jmp Word8 where
-  jmp imm = ensureBufferSize x86_max_instruction_bytes >> x86_jump8 imm 
+  jmp imm = ensureBufferSize x86_max_instruction_bytes >> x86_jump8 imm
 
 instance Jmp Word32 where
-  jmp imm = ensureBufferSize x86_max_instruction_bytes >> x86_jump32 imm 
+  jmp imm = ensureBufferSize x86_max_instruction_bytes >> x86_jump32 imm
 
 instance Jmp Reg32 where
-  jmp (Reg32 dest) = ensureBufferSize x86_max_instruction_bytes >> x86_jump_reg dest 
+  jmp (Reg32 dest) = ensureBufferSize x86_max_instruction_bytes >> x86_jump_reg dest
 
 instance Jmp Addr where
-  jmp (Addr dest) = ensureBufferSize x86_max_instruction_bytes >> x86_jump_mem dest 
+  jmp (Addr dest) = ensureBufferSize x86_max_instruction_bytes >> x86_jump_mem dest
 
 instance Jmp (Disp, Reg32) where
-  jmp (Disp disp, Reg32 dest) = ensureBufferSize x86_max_instruction_bytes >> x86_jump_membase dest disp 
+  jmp (Disp disp, Reg32 dest) = ensureBufferSize x86_max_instruction_bytes >> x86_jump_membase dest disp
 
 instance Jmp Ind where
-  jmp (Ind (Reg32 dest)) = ensureBufferSize x86_max_instruction_bytes >> x86_jump_membase dest 0 
+  jmp (Ind (Reg32 dest)) = ensureBufferSize x86_max_instruction_bytes >> x86_jump_membase dest 0
 
 instance Jmp Label where
   jmp l = do ensureBufferSize x86_max_instruction_bytes >> x86_jump32 0
              emitFixup l (-4) Fixup32
-            
+
 instance Jmp (Ptr a) where
-  jmp ptr = ensureBufferSize x86_max_instruction_bytes >> x86_jump_pointer ptr 
+  jmp ptr = ensureBufferSize x86_max_instruction_bytes >> x86_jump_pointer ptr
 
 -- jump on condition code (branch)
 
@@ -2575,23 +2575,23 @@ class Call a where
   call :: a -> CodeGen e s ()
 
 instance Call Word32 where
-  call imm = ensureBufferSize x86_max_instruction_bytes >> x86_call_imm imm 
+  call imm = ensureBufferSize x86_max_instruction_bytes >> x86_call_imm imm
 
 instance Call Label where
   call l = do ensureBufferSize x86_max_instruction_bytes >> x86_call_imm 0
               emitFixup l (-4) Fixup32
 
 instance Call Reg32 where
-  call (Reg32 dest) = ensureBufferSize x86_max_instruction_bytes >> x86_call_reg dest 
+  call (Reg32 dest) = ensureBufferSize x86_max_instruction_bytes >> x86_call_reg dest
 
 instance Call Addr where
-  call (Addr dest) = ensureBufferSize x86_max_instruction_bytes >> x86_call_mem dest 
+  call (Addr dest) = ensureBufferSize x86_max_instruction_bytes >> x86_call_mem dest
 
 instance Call (Disp, Reg32) where
-  call (Disp disp, Reg32 dest) = ensureBufferSize x86_max_instruction_bytes >> x86_call_membase dest disp 
+  call (Disp disp, Reg32 dest) = ensureBufferSize x86_max_instruction_bytes >> x86_call_membase dest disp
 
 instance Call Ind where
-  call (Ind (Reg32 dest)) = ensureBufferSize x86_max_instruction_bytes >> x86_call_membase dest 0 
+  call (Ind (Reg32 dest)) = ensureBufferSize x86_max_instruction_bytes >> x86_call_membase dest 0
 
 instance Call (FunPtr a) where
   call f = ensureBufferSize x86_max_instruction_bytes >> x86_call_hs f
@@ -3336,25 +3336,25 @@ class Fld a b where
 instance Fld FPTopReg FPReg where
     fld FPTopReg (FPReg idx) = ensureBufferSize x86_max_instruction_bytes >> x86_fld_reg idx
 
-instance Fld FPTopReg Addr where 
+instance Fld FPTopReg Addr where
     fld FPTopReg (Addr a) = ensureBufferSize x86_max_instruction_bytes >> x86_fld a True
 
-instance Fld FPTopReg (Disp, Reg32) where 
+instance Fld FPTopReg (Disp, Reg32) where
     fld FPTopReg (Disp d, Reg32 r) = ensureBufferSize x86_max_instruction_bytes >> x86_fld_membase r d True
 
-instance Fld FPTopReg Ind where 
+instance Fld FPTopReg Ind where
     fld FPTopReg (Ind (Reg32 r)) = ensureBufferSize x86_max_instruction_bytes >> x86_fld_membase r 0 True
 
 class Fld80 a b where
     fld80 :: a -> b -> CodeGen e s ()
 
-instance Fld80 FPTopReg Addr where 
+instance Fld80 FPTopReg Addr where
     fld80 FPTopReg (Addr a) = ensureBufferSize x86_max_instruction_bytes >> x86_fld80_mem a
 
-instance Fld80 FPTopReg (Disp, Reg32) where 
+instance Fld80 FPTopReg (Disp, Reg32) where
     fld80 FPTopReg (Disp d, Reg32 r) = ensureBufferSize x86_max_instruction_bytes >> x86_fld80_membase r d
 
-instance Fld80 FPTopReg Ind where 
+instance Fld80 FPTopReg Ind where
     fld80 FPTopReg (Ind (Reg32 r)) = ensureBufferSize x86_max_instruction_bytes >> x86_fld80_membase r 0
 
 class Fst a where
@@ -3427,23 +3427,23 @@ instance Fldcw Ind where
 class Fild a where
     fild :: a -> CodeGen e s ()
 
-instance Fild Addr where 
+instance Fild Addr where
     fild (Addr a) = ensureBufferSize x86_max_instruction_bytes >> x86_fild a FInt32
 
-instance Fild (Disp, Reg32) where 
+instance Fild (Disp, Reg32) where
     fild (Disp d, Reg32 r) = ensureBufferSize x86_max_instruction_bytes >> x86_fild_membase r d FInt32
 
-instance Fild Ind where 
+instance Fild Ind where
     fild (Ind (Reg32 r)) = ensureBufferSize x86_max_instruction_bytes >> x86_fild_membase r 0 FInt32
 
 
 class Fist a where
     fist :: a -> CodeGen e s ()
 
-instance Fist (Disp, Reg32) where 
+instance Fist (Disp, Reg32) where
     fist (Disp d, Reg32 r) = ensureBufferSize x86_max_instruction_bytes >> x86_fist_membase r d FInt32
 
-instance Fist Ind where 
+instance Fist Ind where
     fist (Ind (Reg32 r)) = ensureBufferSize x86_max_instruction_bytes >> x86_fist_membase r 0 FInt32
 
 
@@ -3453,10 +3453,10 @@ class Fistp a where
 instance Fistp Addr where
     fistp (Addr a) = ensureBufferSize x86_max_instruction_bytes >> x86_fist_pop a FInt32
 
-instance Fistp (Disp, Reg32) where 
+instance Fistp (Disp, Reg32) where
     fistp (Disp d, Reg32 r) = ensureBufferSize x86_max_instruction_bytes >> x86_fist_pop_membase r d FInt32
 
-instance Fistp Ind where 
+instance Fistp Ind where
     fistp (Ind (Reg32 r)) = ensureBufferSize x86_max_instruction_bytes >> x86_fist_pop_membase r 0 FInt32
 
 

@@ -12,7 +12,7 @@ import Text.ParserCombinators.Parsec.Language
 import Text.ParserCombinators.Parsec.Expr
 
 lexer :: P.TokenParser ()
-lexer  = P.makeTokenParser 
+lexer  = P.makeTokenParser
          (haskellStyle
          { reservedOpNames = ["*","/","+","-"]
          })

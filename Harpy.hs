@@ -3,7 +3,7 @@
 -- Module:      Harpy
 -- Copyright:   (c) 2006-2015 Martin Grabmueller and Dirk Kleeblatt
 -- License:     BSD3
--- 
+--
 -- Maintainer:  martin@grabmueller.de
 -- Stability:   provisional
 -- Portability: portable
